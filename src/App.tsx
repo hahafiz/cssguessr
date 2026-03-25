@@ -1,3 +1,5 @@
+import { Button } from "./components/ui/button/button";
+
 function App() {
   return (
     <>
@@ -5,6 +7,9 @@ function App() {
       <p>
         Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
       </p>
+      <Button variant="primary" size="lg">
+        Click me
+      </Button>
     </>
   );
 }
