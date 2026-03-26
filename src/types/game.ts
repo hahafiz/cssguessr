@@ -1,0 +1,1 @@
+// color, score, gamestate interfaces
