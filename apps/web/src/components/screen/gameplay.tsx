@@ -1,6 +1,6 @@
 // TODO: gameplay screen
 import { useState } from "react";
-import { type GameState } from "../../types/game";
+// import { type GameState } from "../../../../../packages/shared-types/game";
 import { generateRandomHex } from "../../lib/color-generator";
 
 export function Gameplay({ user, color, score, round }: GameState) {

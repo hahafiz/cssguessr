@@ -6,3 +6,13 @@ export interface GameState {
   score: number;
   round: number;
 }
+
+export interface Room {
+  id: string;
+  players: string[];
+}
+
+export interface Score {
+  userId: string;
+  points: number;
+}

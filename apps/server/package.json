@@ -1,0 +1,17 @@
+{
+  "name": "@cssguessr/server",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "typescript": "^6.0.3",
+    "tsx": "^4.22.4"
+  }
+}
