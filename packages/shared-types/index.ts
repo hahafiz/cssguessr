@@ -1,18 +1,27 @@
-// color, score, gamestate interfaces
-
-export interface GameState {
-  user: string;
-  color: string;
-  score: number;
-  round: number;
-}
-
-export interface Room {
+// tables types
+export interface RoomsRow {
   id: string;
-  players: string[];
+  color_sequence: string;
+  max_players: number;
+  status: "waiting" | "active" | "expired";
+  created_at: string;
 }
 
-export interface Score {
-  userId: string;
-  points: number;
+export interface ScoresRow {
+  id: number;
+  room_id: string; // matches FK to rooms.id
+  player_id: string;
+  round_number: number;
+  score: number;
+}
+
+// cleaned up version for frontend/API responses
+export interface Room extends Omit<RoomsRow, "color_sequence"> {
+  color_sequence: string[];
+}
+
+export interface CreateRoom {
+  id: string;
+  color_sequence: string[];
+  max_players?: number;
 }
