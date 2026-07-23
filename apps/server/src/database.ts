@@ -1,5 +1,5 @@
 import { DatabaseSync } from "node:sqlite";
-import { RoomsRow } from "../../../packages/shared-types";
+import { RoomsRow } from "@cssguessr/shared-types";
 
 const db = new DatabaseSync("./data/cssguessr.db");
 
