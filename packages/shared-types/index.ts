@@ -17,11 +17,11 @@ export interface ScoresRow {
 
 // cleaned up version for frontend/API responses
 export interface Room extends Omit<RoomsRow, "color_sequence"> {
+  id: string;
   color_sequence: string[];
 }
 
-export interface CreateRoom {
-  id: string;
-  color_sequence: string[];
+// user input
+export interface CreateRoomInput {
   max_players?: number;
 }

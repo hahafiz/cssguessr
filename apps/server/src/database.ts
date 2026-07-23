@@ -1,4 +1,5 @@
 import { DatabaseSync } from "node:sqlite";
+import { RoomsRow } from "../../../packages/shared-types";
 
 const db = new DatabaseSync("./data/cssguessr.db");
 
@@ -22,5 +23,9 @@ db.exec(`
     FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
   );
   `);
+
+export function parseRoomRow(room: RoomsRow) {
+  return JSON.parse(room.color_sequence);
+}
 
 export default db;
