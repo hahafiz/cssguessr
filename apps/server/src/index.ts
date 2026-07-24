@@ -1,6 +1,8 @@
 import express from "express";
 import db from "./database.ts";
+import { parseRoomRow } from "./database.ts";
 import crypto from "crypto";
+import { parse } from "path";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -50,3 +52,5 @@ allRow.forEach((room: any) => {
   console.log(`Status: ${room.status}`);
   console.log("----------------------");
 });
+
+console.log("PARSE ROOM ROW:", parseRoomRow);

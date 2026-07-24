@@ -1,5 +1,5 @@
 import { DatabaseSync } from "node:sqlite";
-import { RoomsRow } from "@cssguessr/shared-types";
+import { Room, RoomsRow } from "@cssguessr/shared-types";
 
 const db = new DatabaseSync("./data/cssguessr.db");
 
@@ -24,8 +24,8 @@ db.exec(`
   );
   `);
 
-export function parseRoomRow(room: RoomsRow) {
-  return JSON.parse(room.color_sequence);
+export function parseRoomRow(room: RoomsRow): Room {
+  return { ...room, color_sequence: JSON.parse(room.color_sequence) };
 }
 
 export default db;
