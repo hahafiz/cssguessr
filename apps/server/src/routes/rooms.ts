@@ -2,7 +2,9 @@ import { Router, Request, Response } from "express";
 
 const router = Router();
 
-router.use();
+router.use(function (req: Request, res: Response) {
+  console.log("Middleware called");
+});
 
 // POST - create new room
 router.post("/", async (req: Request, res: Response) => {});
