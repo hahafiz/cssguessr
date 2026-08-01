@@ -1,9 +1,6 @@
 import express from "express";
 import db from "./database.ts";
-import { parseRoomRow } from "./database.ts";
 import roomRrouter from "./routes/rooms.ts";
-import crypto from "crypto";
-import { parse } from "path";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -24,23 +21,6 @@ app.listen(PORT, () => {
 const query = db.prepare("SELECT name FROM sqlite_master WHERE type='table'");
 console.log("DATABASE: ", query.all());
 
-// insert a row to ROOMS table
-const colorSequence = ["#ff0000", "#00ff00", "#0000ff"];
-const colorJsonStr = JSON.stringify(colorSequence);
-const roomId = crypto.randomUUID();
-
-const insert = db.prepare(
-  "INSERT INTO rooms (id, color_sequence, max_players) values (?, ?, ?)",
-);
-
-// log insert
-const result = insert.run(roomId, colorJsonStr, 4);
-
-console.log("--- INSERT SUCCESSFUL");
-console.log(`Last inserted ID: ${result.lastInsertRowid}`);
-console.log(`Room string ID created: ${roomId}`);
-console.log(`Changes made: ${result.changes}`);
-
 // log all rows
 const rowQuery = db.prepare("SELECT * FROM rooms");
 const allRow = rowQuery.all();
@@ -55,5 +35,3 @@ allRow.forEach((room: any) => {
   console.log(`Status: ${room.status}`);
   console.log("----------------------");
 });
-
-console.log("PARSE ROOM ROW:", parseRoomRow);
