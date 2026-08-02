@@ -9,13 +9,10 @@ const router = Router();
 // POST - create new room
 router.post("/", async (req: Request, res: Response) => {
   const { max_players }: CreateRoomInput = req.body;
+  const isValidMaxPlayer =
+    typeof max_players === "number" && max_players >= 0 && max_players < 10;
 
-  if (
-    typeof max_players !== "number" ||
-    !max_players ||
-    max_players >= 0 ||
-    max_players < 10
-  ) {
+  if (!isValidMaxPlayer) {
     res.status(400).json({ error: "Max player is invalid" });
     return;
   }
