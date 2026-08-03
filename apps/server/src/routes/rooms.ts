@@ -3,9 +3,9 @@ import db from "./../database.ts";
 import { parseRoomRow } from "./../database.ts";
 import { Room, RoomsRow, CreateRoomInput } from "@cssguessr/shared-types";
 import crypto from "crypto";
-import { error } from "console";
 
 const router = Router();
+const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
 
 // POST - create new room
 router.post("/", async (req: Request, res: Response) => {
@@ -28,14 +28,23 @@ router.post("/", async (req: Request, res: Response) => {
     "INSERT INTO rooms (id, color_sequence, max_players) values (?, ?, ?)",
   );
 
-  const room = query.run(roomID, colorJsonStr, max_players);
+  let newRoomRow: RoomsRow | undefined;
 
-  if (!room.lastInsertRowid) {
-    res.status(400).json({ error: "Error" });
+  try {
+    query.run(roomID, colorJsonStr, max_players);
+    newRoomRow = getRoomId.get(roomID) as RoomsRow | undefined;
+  } catch (err) {
+    res.status(400).json({ err: "Error" });
     return;
   }
 
-  res.json(room.lastInsertRowid);
+  if (!newRoomRow) {
+    res.status(500).json({ error: "Room created but could not be retrieved" });
+    return;
+  }
+
+  const newRoom: Room = parseRoomRow(newRoomRow);
+  res.json(newRoom);
 });
 
 // GET - get room
@@ -47,16 +56,20 @@ router.get("/:id", async (req: Request, res: Response) => {
     return;
   }
 
-  const query = db.prepare("SELECT * FROM rooms WHERE id = ?");
+  let row;
 
-  const row = query.get(id) as RoomsRow | undefined;
-  if (!row) {
-    res.status(404).json({ error: "Game ID not found" });
+  try {
+    row = getRoomId.get(id) as RoomsRow | undefined;
+    if (!row) {
+      res.status(404).json({ error: "Game ID not found" });
+      return;
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Error" });
     return;
   }
 
   const parseRow: Room = parseRoomRow(row);
-
   res.json(parseRow);
 });
 
