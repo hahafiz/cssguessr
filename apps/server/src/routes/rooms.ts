@@ -22,7 +22,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 
   const colorSequence = ["#ff0000", "#00ff00", "#0000ff"];
-  const colorJsonStr = JSON.stringify(colorSequence);
+  const colorJsonStr = JSON.stringify(colorSequence); // convert to json so BE can read
   const roomID = crypto.randomUUID();
   const query = db.prepare(
     "INSERT INTO rooms (id, color_sequence, max_players) values (?, ?, ?)",
@@ -31,8 +31,8 @@ router.post("/", async (req: Request, res: Response) => {
   let newRoomRow: RoomsRow | undefined;
 
   try {
-    query.run(roomID, colorJsonStr, max_players);
-    newRoomRow = getRoomId.get(roomID) as RoomsRow | undefined;
+    query.run(roomID, colorJsonStr, max_players); // insert newly created roomID to database
+    newRoomRow = getRoomId.get(roomID) as RoomsRow | undefined; // fetched the newly created room as raw data
   } catch (err) {
     res.status(400).json({ err: "Error" });
     return;
@@ -43,7 +43,7 @@ router.post("/", async (req: Request, res: Response) => {
     return;
   }
 
-  const newRoom: Room = parseRoomRow(newRoomRow);
+  const newRoom: Room = parseRoomRow(newRoomRow); // parse the raw data so FE can read
   res.json(newRoom);
 });
 
