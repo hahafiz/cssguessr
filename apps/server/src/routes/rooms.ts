@@ -3,6 +3,7 @@ import db from "./../database.ts";
 import { parseRoomRow } from "./../database.ts";
 import { Room, RoomsRow, CreateRoomInput } from "@cssguessr/shared-types";
 import crypto from "crypto";
+import { error } from "console";
 
 const router = Router();
 
@@ -10,7 +11,10 @@ const router = Router();
 router.post("/", async (req: Request, res: Response) => {
   const { max_players }: CreateRoomInput = req.body;
   const isValidMaxPlayer =
-    typeof max_players === "number" && max_players >= 0 && max_players < 10;
+    typeof max_players === "number" &&
+    Number.isInteger(max_players) &&
+    max_players >= 1 &&
+    max_players <= 10;
 
   if (!isValidMaxPlayer) {
     res.status(400).json({ error: "Max player is invalid" });
@@ -23,9 +27,15 @@ router.post("/", async (req: Request, res: Response) => {
   const query = db.prepare(
     "INSERT INTO rooms (id, color_sequence, max_players) values (?, ?, ?)",
   );
+
   const room = query.run(roomID, colorJsonStr, max_players);
 
-  res.json(room);
+  if (!room.lastInsertRowid) {
+    res.status(400).json({ error: "Error" });
+    return;
+  }
+
+  res.json(room.lastInsertRowid);
 });
 
 // GET - get room
