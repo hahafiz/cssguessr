@@ -7,7 +7,14 @@ function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function hslToRgb(color: RawColor): [number, number, number] {}
+function hslToRgb(color: RawColor): [number, number, number] {
+  const [hue, saturation, lightness] = color;
+  const s = saturation / 100;
+  const l = lightness / 100;
+  const chroma = (1 - Math.abs(2 * l - 1)) * s;
+
+  const x = chroma * (1 - Math.abs(((hue / 60) % 2) - 1));
+}
 function formatAsHsl(color: RawColor): string {} // uses color directly
 function formatAsRgb(color: RawColor): string {} // calls hsltorgb first
 
