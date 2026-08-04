@@ -1,7 +1,7 @@
 // tables types
 export interface RoomsRow {
   id: string;
-  color_sequence: string;
+  color_sequence: string; // an array of numeric tuples
   max_players: number;
   status: "waiting" | "active" | "expired";
   created_at: string;
@@ -14,6 +14,8 @@ export interface ScoresRow {
   round_number: number;
   score: number;
 }
+
+export type RawColor = [number, number, number]; // [hue 0-360, saturation 0-100, lightness 0-100]
 
 // cleaned up version for frontend/API responses
 export interface Room extends Omit<RoomsRow, "color_sequence"> {
