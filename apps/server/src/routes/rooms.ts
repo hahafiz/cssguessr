@@ -8,7 +8,7 @@ import { generateRawColorSequence } from "../utils/colors.ts";
 const router = Router();
 const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
 
-// POST - create new room
+// POST /room - create new room
 router.post("/", async (req: Request, res: Response) => {
   const { max_players }: CreateRoomInput = req.body;
   const isValidMaxPlayer =
@@ -48,7 +48,7 @@ router.post("/", async (req: Request, res: Response) => {
   res.json(newRoom);
 });
 
-// GET - get room
+// GET /room/:id - get room
 router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
