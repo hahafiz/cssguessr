@@ -1,13 +1,12 @@
-import { RawColor } from "@cssguessr/shared-types";
+import { RawColor, ColorFormat } from "@cssguessr/shared-types";
 
-type ColorFormat = "rgb" | "hsl" | "rgba" | "hsla";
 const SEQUENCE_LENGTH = 10;
 
 function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function generateRawColorSequence(): RawColor[] {
+export function generateRawColorSequence(): RawColor[] {
   const colorSequence = new Array<RawColor>(SEQUENCE_LENGTH);
 
   for (let i = 0; i < SEQUENCE_LENGTH; i++) {
@@ -74,9 +73,9 @@ function hslToRgb(color: RawColor): [number, number, number] {
 }
 
 function formatAsHsl(color: RawColor): string {
-  const [hue, saturation, lightness] = color;
+  const [h, s, l] = color;
 
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  return `hsl(${h}, ${s}%, ${l}%)`;
 }
 
 function formatAsRgb(color: RawColor): string {
@@ -86,13 +85,23 @@ function formatAsRgb(color: RawColor): string {
 }
 
 function formatColor(color: RawColor, format: ColorFormat): string {
-  return {
-    hsl: formatAsHsl(color),
-    rgb: formatAsRgb(color),
-  };
+  switch (format) {
+    case "rgb":
+    case "rgba":
+      return formatAsRgb(color);
+    case "hsl":
+    case "hsla":
+      return formatAsHsl(color);
+    default:
+      throw new Error(`Unknown color format!`);
+  }
 }
 
 export function formatColorSequence(
   colors: RawColor[],
   format: ColorFormat,
-): string[] {}
+): string[] {
+  const colorSequence = colors.map((c) => formatColor(c, format));
+
+  return colorSequence;
+}
