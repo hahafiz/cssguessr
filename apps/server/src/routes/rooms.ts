@@ -9,7 +9,7 @@ const router = Router();
 const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
 
 // POST /room - create new room
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response): Promise<void> => {
   const { max_players }: CreateRoomInput = req.body;
   const isValidMaxPlayer =
     typeof max_players === "number" &&
@@ -49,7 +49,7 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 // GET /room/:id - get room
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
   if (typeof id !== "string") {

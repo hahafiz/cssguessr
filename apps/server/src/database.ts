@@ -23,7 +23,7 @@ db.exec(`
     score INTEGER NOT NULL,
     FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
   );
-  `);
+`);
 
 export function parseRoomRow(room: RoomsRow): Room {
   const parseColor: RawColor[] = JSON.parse(room.color_sequence);
