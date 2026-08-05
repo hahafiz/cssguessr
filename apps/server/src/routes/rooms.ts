@@ -3,6 +3,7 @@ import db from "./../database.ts";
 import { parseRoomRow } from "./../database.ts";
 import { Room, RoomsRow, CreateRoomInput } from "@cssguessr/shared-types";
 import crypto from "crypto";
+import { generateRawColorSequence } from "../utils/colors.ts";
 
 const router = Router();
 const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
@@ -21,7 +22,7 @@ router.post("/", async (req: Request, res: Response) => {
     return;
   }
 
-  const colorSequence = ["#ff0000", "#00ff00", "#0000ff"];
+  const colorSequence = generateRawColorSequence();
   const colorJsonStr = JSON.stringify(colorSequence); // convert to json so BE can read
   const roomID = crypto.randomUUID();
   const query = db.prepare(
