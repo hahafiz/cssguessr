@@ -73,8 +73,17 @@ function hslToRgb(color: RawColor): [number, number, number] {
   return [red, green, blue];
 }
 
-function formatAsHsl(color: RawColor): string {} // uses color directly
-function formatAsRgb(color: RawColor): string {} // calls hsltorgb first
+function formatAsHsl(color: RawColor): string {
+  const [hue, saturation, lightness] = color;
+
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
+function formatAsRgb(color: RawColor): string {
+  const [r, g, b] = hslToRgb(color);
+
+  return `rgb(${r}, ${g}, ${b})`;
+}
 
 function formatColor(color: RawColor, format: ColorFormat): string {
   return {
