@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import db from "../database";
 
 const router = Router();
+const SQLITE_CONSTRAINT_FOREIGNKEY = 787;
 
 // POST /room/:id/score
 router.post(
@@ -9,6 +10,11 @@ router.post(
   async (req: Request, res: Response): Promise<void> => {
     const { id: room_id } = req.params;
     const { player_id, round_number, score } = req.body;
+
+    if (typeof room_id !== "string") {
+      res.status(400).json({ error: "ID is not a string" });
+      return;
+    }
 
     if (
       !player_id ||
@@ -23,14 +29,6 @@ router.post(
     }
 
     try {
-      const roomExists = db
-        .prepare("SELECT id FROM rooms WHERE id = ?")
-        .get(room_id);
-      if (!roomExists) {
-        res.status(404).json({ error: "Room not found" });
-        return;
-      }
-
       const insertQuery = db.prepare(
         `INSERT INTO scores (room_id, player_id, round_number, score) VALUES (?, ?, ?, ?)`,
       );
@@ -39,6 +37,16 @@ router.post(
 
       res.status(201).json(result);
     } catch (err) {
+      const isForeignKeyError =
+        err instanceof Error &&
+        "errcode" in err &&
+        err.errcode === SQLITE_CONSTRAINT_FOREIGNKEY;
+
+      if (isForeignKeyError) {
+        res.status(404).json({ error: "Room not found" });
+        return;
+      }
+
       console.error("Error submitting score: ", err);
       res.status(500).json({ err: "Internal server error" });
     }

@@ -1,5 +1,4 @@
 import express from "express";
-import db from "./database.ts";
 import roomRouter from "./routes/rooms.ts";
 import scoreRouter from "./routes/scores.ts";
 
