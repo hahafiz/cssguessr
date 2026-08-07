@@ -7,6 +7,12 @@ import { generateRawColorSequence } from "../utils/colors.ts";
 
 const router = Router();
 const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
+const insertRoom = db.prepare(
+  "INSERT INTO rooms (id, color_sequence, max_players) values (?, ?, ?)",
+);
+const insertPlayer = db.prepare(
+  "INSERT INTO players (player_id, room_id, is_host) values (?, ?, ?)",
+);
 
 // POST /room - create new room
 router.post("/", async (req: Request, res: Response): Promise<void> => {
@@ -25,17 +31,19 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   const colorSequence = generateRawColorSequence();
   const colorJsonStr = JSON.stringify(colorSequence); // convert to json so BE can read
   const roomID = crypto.randomUUID();
-  const query = db.prepare(
-    "INSERT INTO rooms (id, color_sequence, max_players) values (?, ?, ?)",
-  );
+  const playerID = crypto.randomUUID();
 
   let newRoomRow: RoomsRow | undefined;
 
   try {
-    query.run(roomID, colorJsonStr, max_players); // insert newly created roomID to database
+    db.exec("BEGIN"); // starts transaction
+    insertRoom.run(roomID, colorJsonStr, max_players); // insert newly created roomID to database
     newRoomRow = getRoomId.get(roomID) as RoomsRow | undefined; // fetched the newly created room as raw data
+    insertPlayer.run(playerID, roomID, 1);
+    db.exec("COMMIT");
   } catch (err) {
-    res.status(400).json({ err: "Error" });
+    db.exec("ROLLBACK");
+    res.status(500).json({ error: "Internal server error" });
     return;
   }
 
@@ -45,7 +53,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   }
 
   const newRoom: Room = parseRoomRow(newRoomRow); // parse the raw data so FE can read
-  res.json(newRoom);
+  res.json({ ...newRoom, player_id: playerID });
 });
 
 // GET /room/:id - get room
