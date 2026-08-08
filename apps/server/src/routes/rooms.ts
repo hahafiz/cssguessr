@@ -4,6 +4,7 @@ import { parseRoomRow } from "./../database.ts";
 import { Room, RoomsRow, CreateRoomInput } from "@cssguessr/shared-types";
 import crypto from "crypto";
 import { generateRawColorSequence } from "../utils/colors.ts";
+import { error } from "console";
 
 const router = Router();
 const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
@@ -12,6 +13,10 @@ const insertRoom = db.prepare(
 );
 const insertPlayer = db.prepare(
   "INSERT INTO players (player_id, room_id, is_host) values (?, ?, ?)",
+);
+
+const roomCapacity = db.prepare(
+  "SELECT COUNT(*) as count FROM players WHERE room_id = ?",
 );
 
 // POST /room - create new room
@@ -54,6 +59,47 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
 
   const newRoom: Room = parseRoomRow(newRoomRow); // parse the raw data so FE can read
   res.json({ ...newRoom, player_id: playerID });
+});
+
+// POST /room/:id - join a room
+router.post("/:id", async (req: Request, res: Response): Promise<void> => {
+  const { id: room_id } = req.params;
+  const playerID = crypto.randomUUID();
+
+  if (typeof room_id !== "string") {
+    res.status(400).json({ error: "ID is not a string" });
+    return;
+  }
+
+  const isRoomExist = getRoomId.get(room_id) as RoomsRow | undefined;
+  const maxPlayers = isRoomExist?.max_players;
+  const roomStatus = isRoomExist?.status;
+  const isCapacity = roomCapacity.get(room_id) as { count: number } | undefined;
+
+  if (!isRoomExist) {
+    res.status(404).json({ error: "Room ID is not found" });
+    return;
+  }
+
+  try {
+    if (roomStatus !== "waiting") {
+      res.status(400).json({ error: "Game already started" });
+      return;
+    }
+
+    if (!isCapacity || !maxPlayers || isCapacity.count >= maxPlayers) {
+      res.status(400).json({ error: "Room is full" });
+      return;
+    }
+
+    insertPlayer.run(playerID, room_id, 0);
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
+
+  const room: Room = parseRoomRow(isRoomExist);
+  res.json({ ...room, player_id: playerID });
 });
 
 // GET /room/:id - get room
