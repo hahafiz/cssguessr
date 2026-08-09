@@ -12,6 +12,7 @@ db.exec(`
     color_sequence TEXT NOT NULL,
     max_players INTEGER DEFAULT 2,
     status TEXT CHECK(status IN ('waiting', 'active', 'expired')) DEFAULT 'waiting',
+    started_at TIMESTAMP DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 
