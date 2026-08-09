@@ -1,13 +1,20 @@
 import { Router, Request, Response } from "express";
 import db from "./../database.ts";
 import { parseRoomRow } from "./../database.ts";
-import { Room, RoomsRow, CreateRoomInput } from "@cssguessr/shared-types";
+import {
+  Room,
+  RoomsRow,
+  CreateRoomInput,
+  PlayersRow,
+} from "@cssguessr/shared-types";
 import crypto from "crypto";
 import { generateRawColorSequence } from "../utils/colors.ts";
-import { error } from "console";
 
 const router = Router();
 const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
+const getPlayerRow = db.prepare(
+  "SELECT * FROM players WHERE room_id = ? AND player_id = ?",
+);
 const insertRoom = db.prepare(
   "INSERT INTO rooms (id, color_sequence, max_players) values (?, ?, ?)",
 );
@@ -17,6 +24,10 @@ const insertPlayer = db.prepare(
 
 const roomCapacity = db.prepare(
   "SELECT COUNT(*) as count FROM players WHERE room_id = ?",
+);
+
+const changeRoomStatus = db.prepare(
+  "UPDATE rooms SET status = ?, started_at = CURRENT_TIMESTAMP WHERE id = ?",
 );
 
 // POST /room - create new room
@@ -57,11 +68,11 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const newRoom: Room = parseRoomRow(newRoomRow); // parse the raw data so FE can read
-  res.json({ ...newRoom, player_id: playerID });
+  const room: Room = parseRoomRow(newRoomRow); // parse the raw data so FE can read
+  res.json({ ...room, player_id: playerID });
 });
 
-// POST /room/:id - join a room
+// POST /room/:id - join room
 router.post("/:id", async (req: Request, res: Response): Promise<void> => {
   const { id: room_id } = req.params;
   const playerID = crypto.randomUUID();
@@ -101,6 +112,67 @@ router.post("/:id", async (req: Request, res: Response): Promise<void> => {
   const room: Room = parseRoomRow(isRoomExist);
   res.json({ ...room, player_id: playerID });
 });
+
+// POST /room/:id - start room
+router.post(
+  "/:id/start",
+  async (req: Request, res: Response): Promise<void> => {
+    const { player_id } = req.body;
+    const { id } = req.params;
+
+    if (typeof id !== "string") {
+      res.status(400).json({ error: "ID is not a string" });
+      return;
+    }
+
+    if (!player_id) {
+      res.status(400).json({ error: "Invalid player ID!" });
+      return;
+    }
+
+    let startedRoomRow: RoomsRow | undefined;
+
+    try {
+      // TODO: these run two DB requests. make it one
+      const player = getPlayerRow.get(id, player_id) as PlayersRow | undefined;
+      const roomRow = getRoomId.get(id) as RoomsRow | undefined;
+
+      if (roomRow?.status === "active") {
+        res.status(400).json({ error: "Game already started" });
+        return;
+      }
+
+      if (roomRow?.status === "expired") {
+        res.status(400).json({ error: "Game already concluded" });
+        return;
+      }
+
+      if (!player) {
+        res.status(400).json({ error: "Player ID not exist" });
+        return;
+      }
+
+      if (!player.is_host) {
+        res.status(400).json({ error: "Only host can starts the game!" });
+        return;
+      }
+
+      changeRoomStatus.run("active", id);
+      startedRoomRow = getRoomId.get(id) as RoomsRow | undefined;
+    } catch (err) {
+      res.status(500).json({ error: "Internal server error" });
+      return;
+    }
+    if (!startedRoomRow) {
+      res
+        .status(500)
+        .json({ error: "Room created but could not be retrieved" });
+      return;
+    }
+    const room: Room = parseRoomRow(startedRoomRow);
+    res.json(room);
+  },
+);
 
 // GET /room/:id - get room
 router.get("/:id", async (req: Request, res: Response): Promise<void> => {
