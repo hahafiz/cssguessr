@@ -4,6 +4,7 @@ export interface RoomsRow {
   color_sequence: string; // an array of numeric tuples
   max_players: number;
   status: "waiting" | "active" | "expired";
+  started_at: string;
   created_at: string;
 }
 
@@ -13,6 +14,14 @@ export interface ScoresRow {
   player_id: string;
   round_number: number;
   score: number;
+}
+
+export interface PlayersRow {
+  id: number;
+  player_id: string;
+  room_id: string;
+  is_host: number;
+  joined_at: string;
 }
 
 export type RawColor = [number, number, number]; // [hue 0-360, saturation 0-100, lightness 0-100]
