@@ -4,6 +4,10 @@ import db from "../database";
 const router = Router();
 const SQLITE_CONSTRAINT_FOREIGNKEY = 787;
 
+const insertQuery = db.prepare(
+  `INSERT INTO scores (room_id, player_id, round_number, score) VALUES (?, ?, ?, ?)`,
+);
+
 // POST /room/:id/score
 router.post(
   "/:id/score",
@@ -29,10 +33,6 @@ router.post(
     }
 
     try {
-      const insertQuery = db.prepare(
-        `INSERT INTO scores (room_id, player_id, round_number, score) VALUES (?, ?, ?, ?)`,
-      );
-
       const result = insertQuery.run(room_id, player_id, round_number, score);
 
       res.status(201).json(result);
@@ -48,7 +48,7 @@ router.post(
       }
 
       console.error("Error submitting score: ", err);
-      res.status(500).json({ err: "Internal server error" });
+      res.status(500).json({ error: "Internal server error" });
     }
   },
 );
