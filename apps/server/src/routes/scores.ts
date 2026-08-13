@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import db from "../database";
+import { getSubmittedPlayerCount } from "../utils/completion.ts";
 
 const router = Router();
 const SQLITE_CONSTRAINT_FOREIGNKEY = 787;
@@ -7,6 +8,22 @@ const SQLITE_CONSTRAINT_FOREIGNKEY = 787;
 const insertQuery = db.prepare(
   `INSERT INTO scores (room_id, player_id, round_number, score) VALUES (?, ?, ?, ?)`,
 );
+
+// POST /room/test/:id
+router.post("/test/:id", async (req: Request, res: Response): Promise<void> => {
+  const { id: room_id } = req.params;
+
+  if (typeof room_id !== "string") {
+    res.status(400).json({ error: "ID is not a string" });
+    return;
+  }
+
+  try {
+    const result = getSubmittedPlayerCount(room_id, 1);
+
+    res.status(201).json(result);
+  } catch (err) {}
+});
 
 // POST /room/:id/score
 router.post(
