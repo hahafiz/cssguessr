@@ -1,6 +1,6 @@
 import { RawColor, ColorFormat } from "@cssguessr/shared-types";
 
-const SEQUENCE_LENGTH = 10;
+export const SEQUENCE_LENGTH = 10;
 
 function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
