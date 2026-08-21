@@ -1,6 +1,9 @@
 import { Router, Request, Response } from "express";
 import db from "../database";
-import { getSubmittedPlayerCount } from "../utils/completion.ts";
+import {
+  getSubmittedPlayerCount,
+  isRoundComplete,
+} from "../utils/completion.ts";
 
 const router = Router();
 const SQLITE_CONSTRAINT_FOREIGNKEY = 787;
@@ -25,7 +28,7 @@ router.post("/test/:id", async (req: Request, res: Response): Promise<void> => {
   } catch (err) {}
 });
 
-// POST /room/:id/score
+// POST /room/:id/score - submit score
 router.post(
   "/:id/score",
   async (req: Request, res: Response): Promise<void> => {
@@ -46,6 +49,11 @@ router.post(
         error:
           "Missing or invalid field. player_id (string), round_number (number), score (number)",
       });
+      return;
+    }
+
+    if (round_number > 1 && !isRoundComplete(room_id, round_number - 1)) {
+      res.status(400).json({ error: "Pervious round is not yet complete" });
       return;
     }
 
