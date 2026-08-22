@@ -4,12 +4,18 @@ import {
   getSubmittedPlayerCount,
   isRoundComplete,
 } from "../utils/completion.ts";
+import { getRoomId } from "./rooms.ts";
+import { RoomsRow } from "@cssguessr/shared-types";
 
 const router = Router();
 const SQLITE_CONSTRAINT_FOREIGNKEY = 787;
 
 const insertQuery = db.prepare(
   `INSERT INTO scores (room_id, player_id, round_number, score) VALUES (?, ?, ?, ?)`,
+);
+
+const getPlayerScore = db.prepare(
+  "SELECT player_id, score FROM scores WHERE room_id = ? AND round_number = ?",
 );
 
 // POST /room/test/:id
@@ -82,12 +88,39 @@ router.post(
 router.get(
   "/:id/results/:round",
   async (req: Request, res: Response): Promise<void> => {
-    const { id: room_id, round: round_number } = req.params;
+    const { id: room_id, round: raw_round_number } = req.params;
 
     if (typeof room_id !== "string") {
       res.status(400).json({ error: "ID is not a string" });
       return;
     }
+
+    const round_number: number = Number(raw_round_number);
+    if (Number.isNaN(round_number)) {
+      res.status(400).json({ error: "Round number must be a valid number" });
+      return;
+    }
+
+    const isRoomExist = getRoomId.get(room_id) as RoomsRow | undefined;
+    let allPlayerScore;
+
+    if (!isRoomExist) {
+      res.status(404).json({ error: "Room ID is not found" });
+      return;
+    }
+
+    try {
+      if (!isRoundComplete(room_id, round_number)) {
+        res.status(200).json({ status: "waiting" });
+        return;
+      }
+
+      allPlayerScore = getPlayerScore.all(room_id, round_number);
+    } catch (err) {
+      res.status(500).json({ error: "Internal server error" });
+      return;
+    }
+    res.json({ status: "complete", scores: allPlayerScore });
   },
 );
 
