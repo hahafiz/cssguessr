@@ -53,7 +53,7 @@ router.post(
     }
 
     if (round_number > 1 && !isRoundComplete(room_id, round_number - 1)) {
-      res.status(400).json({ error: "Pervious round is not yet complete" });
+      res.status(400).json({ error: "Previous round is not yet complete" });
       return;
     }
 
@@ -74,6 +74,19 @@ router.post(
 
       console.error("Error submitting score: ", err);
       res.status(500).json({ error: "Internal server error" });
+    }
+  },
+);
+
+// GET /room/:id/results/:round - per-round result
+router.get(
+  "/:id/results/:round",
+  async (req: Request, res: Response): Promise<void> => {
+    const { id: room_id, round: round_number } = req.params;
+
+    if (typeof room_id !== "string") {
+      res.status(400).json({ error: "ID is not a string" });
+      return;
     }
   },
 );
