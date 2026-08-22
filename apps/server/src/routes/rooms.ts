@@ -11,7 +11,7 @@ import crypto from "crypto";
 import { generateRawColorSequence } from "../utils/colors.ts";
 
 const router = Router();
-const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
+export const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
 const getPlayerRow = db.prepare(
   "SELECT * FROM players WHERE room_id = ? AND player_id = ?",
 );
