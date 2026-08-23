@@ -6,6 +6,7 @@ import {
   RoomsRow,
   CreateRoomInput,
   PlayersRow,
+  PlayerWithRoom,
 } from "@cssguessr/shared-types";
 import crypto from "crypto";
 import { generateRawColorSequence } from "../utils/colors.ts";
@@ -14,6 +15,9 @@ const router = Router();
 export const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
 const getPlayerRow = db.prepare(
   "SELECT * FROM players WHERE room_id = ? AND player_id = ?",
+);
+const getPlayerWithRoom = db.prepare(
+  "SELECT players.is_host, rooms.id, rooms.color_sequence, rooms.max_players, rooms.status, rooms.started_at, rooms.created_at FROM players JOIN rooms ON players.room_id = rooms.id WHERE players.room_id = ? AND players.player_id = ?",
 );
 const insertRoom = db.prepare(
   "INSERT INTO rooms (id, color_sequence, max_players) values (?, ?, ?)",
@@ -133,26 +137,26 @@ router.post(
     let startedRoomRow: RoomsRow | undefined;
 
     try {
-      // TODO: these run two DB requests. make it one
-      const player = getPlayerRow.get(id, player_id) as PlayersRow | undefined;
-      const roomRow = getRoomId.get(id) as RoomsRow | undefined;
+      const playerRoom = getPlayerWithRoom.get(id, player_id) as
+        | PlayerWithRoom
+        | undefined;
 
-      if (roomRow?.status === "active") {
-        res.status(400).json({ error: "Game already started" });
-        return;
-      }
-
-      if (roomRow?.status === "expired") {
-        res.status(400).json({ error: "Game already concluded" });
-        return;
-      }
-
-      if (!player) {
+      if (!playerRoom) {
         res.status(400).json({ error: "Player ID not exist" });
         return;
       }
 
-      if (!player.is_host) {
+      if (playerRoom?.status === "active") {
+        res.status(400).json({ error: "Game already started" });
+        return;
+      }
+
+      if (playerRoom?.status === "expired") {
+        res.status(400).json({ error: "Game already concluded" });
+        return;
+      }
+
+      if (!playerRoom.is_host) {
         res.status(400).json({ error: "Only host can starts the game!" });
         return;
       }
