@@ -20,7 +20,7 @@ export function generateRawColorSequence(): RawColor[] {
   return colorSequence;
 }
 
-function hslToRgb(color: RawColor): [number, number, number] {
+export function hslToRgb(color: RawColor): [number, number, number] {
   const [hue, saturation, lightness] = color;
   const h = Math.floor(hue / 60);
   const s = saturation / 100;
@@ -106,7 +106,7 @@ export function formatColorSequence(
   return colorSequence;
 }
 
-function calculateScore(actual: RGBColor, guess: RGBColor): number {
+export function calculateScore(actual: RGBColor, guess: RGBColor): number {
   const [actualR, actualG, actualB] = actual;
   const [guessR, guessG, guessB] = guess;
 

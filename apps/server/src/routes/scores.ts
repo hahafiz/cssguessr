@@ -1,13 +1,14 @@
 import { Router, Request, Response } from "express";
 import db from "../database";
 import { isGameComplete, isRoundComplete } from "../utils/completion.ts";
-import { RoomsRow } from "@cssguessr/shared-types";
+import { RawColor, RGBColor, RoomsRow } from "@cssguessr/shared-types";
 import {
   getRoomId,
   insertQuery,
   getPlayerScore,
   getPlayerFinalScore,
 } from "../utils/queries.ts";
+import { calculateScore, hslToRgb } from "../utils/colors.ts";
 
 const router = Router();
 const SQLITE_CONSTRAINT_FOREIGNKEY = 787;
@@ -17,7 +18,8 @@ router.post(
   "/:id/score",
   async (req: Request, res: Response): Promise<void> => {
     const { id: room_id } = req.params;
-    const { player_id, round_number, score } = req.body;
+    const { player_id, round_number, guessed_r, guessed_g, guessed_b } =
+      req.body;
 
     if (typeof room_id !== "string") {
       res.status(400).json({ error: "ID is not a string" });
@@ -27,7 +29,9 @@ router.post(
     if (
       !player_id ||
       typeof round_number !== "number" ||
-      typeof score !== "number"
+      typeof guessed_r !== "number" ||
+      typeof guessed_g !== "number" ||
+      typeof guessed_b !== "number"
     ) {
       res.status(400).json({
         error:
@@ -41,10 +45,26 @@ router.post(
       return;
     }
 
+    const roomRow = getRoomId.get(room_id) as RoomsRow | undefined;
+    if (!roomRow) {
+      res.status(404).json({ error: "Room not found" });
+      return;
+    }
+
+    const colorSequence: RawColor[] = JSON.parse(roomRow.color_sequence);
+    const actualHsl = colorSequence[round_number - 1];
+    if (!actualHsl) {
+      res.status(400).json({ error: "Invalid round number" });
+      return;
+    }
+
+    const actualRgb = hslToRgb(actualHsl);
+    const guessRgb: RGBColor = [guessed_r, guessed_g, guessed_b];
+    const score = calculateScore(actualRgb, guessRgb);
+
     try {
       const result = insertQuery.run(room_id, player_id, round_number, score);
-
-      res.status(201).json(result);
+      res.status(201).json({ ...result, score });
     } catch (err) {
       const isForeignKeyError =
         err instanceof Error &&
