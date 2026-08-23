@@ -1,5 +1,4 @@
 import db from "../database";
-// TODO: list all queries here
 
 export const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
 
