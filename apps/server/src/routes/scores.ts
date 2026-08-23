@@ -1,9 +1,6 @@
 import { Router, Request, Response } from "express";
 import db from "../database";
-import {
-  getSubmittedPlayerCount,
-  isRoundComplete,
-} from "../utils/completion.ts";
+import { isGameComplete, isRoundComplete } from "../utils/completion.ts";
 import { getRoomId } from "./rooms.ts";
 import { RoomsRow } from "@cssguessr/shared-types";
 
@@ -18,21 +15,9 @@ const getPlayerScore = db.prepare(
   "SELECT player_id, score FROM scores WHERE room_id = ? AND round_number = ?",
 );
 
-// POST /room/test/:id
-router.post("/test/:id", async (req: Request, res: Response): Promise<void> => {
-  const { id: room_id } = req.params;
-
-  if (typeof room_id !== "string") {
-    res.status(400).json({ error: "ID is not a string" });
-    return;
-  }
-
-  try {
-    const result = getSubmittedPlayerCount(room_id, 1);
-
-    res.status(201).json(result);
-  } catch (err) {}
-});
+const getPlayerFinalScore = db.prepare(
+  "SELECT player_id, SUM(score) AS total_score FROM scores WHERE room_id = ? GROUP BY player_id",
+);
 
 // POST /room/:id/score - submit score
 router.post(
@@ -84,6 +69,39 @@ router.post(
   },
 );
 
+// GET /room/:id/results - final results
+router.get(
+  "/:id/results",
+  async (req: Request, res: Response): Promise<void> => {
+    const { id: room_id } = req.params;
+
+    if (typeof room_id !== "string") {
+      res.status(400).json({ error: "ID is not a string" });
+      return;
+    }
+
+    const isRoomExist = getRoomId.get(room_id) as RoomsRow | undefined;
+    if (!isRoomExist) {
+      res.status(404).json({ error: "Room ID is not found" });
+      return;
+    }
+
+    let allPlayerScore;
+    try {
+      if (!isGameComplete(room_id)) {
+        res.status(200).json({ status: "waiting" });
+        return;
+      }
+
+      allPlayerScore = getPlayerFinalScore.all(room_id);
+    } catch (err) {
+      res.status(500).json({ error: "Internal server error" });
+      return;
+    }
+    res.json({ status: "complete", scores: allPlayerScore });
+  },
+);
+
 // GET /room/:id/results/:round - per-round result
 router.get(
   "/:id/results/:round",
@@ -102,13 +120,12 @@ router.get(
     }
 
     const isRoomExist = getRoomId.get(room_id) as RoomsRow | undefined;
-    let allPlayerScore;
-
     if (!isRoomExist) {
       res.status(404).json({ error: "Room ID is not found" });
       return;
     }
 
+    let allPlayerScore;
     try {
       if (!isRoundComplete(room_id, round_number)) {
         res.status(200).json({ status: "waiting" });
