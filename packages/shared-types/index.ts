@@ -25,6 +25,7 @@ export interface PlayersRow {
 }
 
 export type RawColor = [number, number, number]; // [hue 0-360, saturation 0-100, lightness 0-100]
+export type RGBColor = [number, number, number];
 export type ColorFormat = "rgb" | "hsl" | "rgba" | "hsla";
 
 // cleaned up version for frontend/API responses
