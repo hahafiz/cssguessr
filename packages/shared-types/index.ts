@@ -37,3 +37,13 @@ export interface Room extends Omit<RoomsRow, "color_sequence"> {
 export interface CreateRoomInput {
   max_players?: number;
 }
+
+export interface PlayerWithRoom {
+  is_host: number;
+  id: string;
+  color_sequence: string;
+  max_players: number;
+  status: "waiting" | "active" | "expired";
+  started_at: string | null;
+  created_at: string;
+}
