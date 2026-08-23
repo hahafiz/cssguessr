@@ -5,34 +5,20 @@ import {
   Room,
   RoomsRow,
   CreateRoomInput,
-  PlayersRow,
   PlayerWithRoom,
 } from "@cssguessr/shared-types";
 import crypto from "crypto";
 import { generateRawColorSequence } from "../utils/colors.ts";
+import {
+  getRoomId,
+  getPlayerWithRoom,
+  insertRoom,
+  insertPlayer,
+  roomCapacity,
+  changeRoomStatus,
+} from "../utils/queries.ts";
 
 const router = Router();
-export const getRoomId = db.prepare("SELECT * FROM rooms WHERE id = ?");
-const getPlayerRow = db.prepare(
-  "SELECT * FROM players WHERE room_id = ? AND player_id = ?",
-);
-const getPlayerWithRoom = db.prepare(
-  "SELECT players.is_host, rooms.id, rooms.color_sequence, rooms.max_players, rooms.status, rooms.started_at, rooms.created_at FROM players JOIN rooms ON players.room_id = rooms.id WHERE players.room_id = ? AND players.player_id = ?",
-);
-const insertRoom = db.prepare(
-  "INSERT INTO rooms (id, color_sequence, max_players) values (?, ?, ?)",
-);
-const insertPlayer = db.prepare(
-  "INSERT INTO players (player_id, room_id, is_host) values (?, ?, ?)",
-);
-
-const roomCapacity = db.prepare(
-  "SELECT COUNT(*) as count FROM players WHERE room_id = ?",
-);
-
-const changeRoomStatus = db.prepare(
-  "UPDATE rooms SET status = ?, started_at = CURRENT_TIMESTAMP WHERE id = ?",
-);
 
 // POST /room - create new room
 router.post("/", async (req: Request, res: Response): Promise<void> => {

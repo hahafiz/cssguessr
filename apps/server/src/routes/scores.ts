@@ -1,23 +1,16 @@
 import { Router, Request, Response } from "express";
 import db from "../database";
 import { isGameComplete, isRoundComplete } from "../utils/completion.ts";
-import { getRoomId } from "./rooms.ts";
 import { RoomsRow } from "@cssguessr/shared-types";
+import {
+  getRoomId,
+  insertQuery,
+  getPlayerScore,
+  getPlayerFinalScore,
+} from "../utils/queries.ts";
 
 const router = Router();
 const SQLITE_CONSTRAINT_FOREIGNKEY = 787;
-
-const insertQuery = db.prepare(
-  `INSERT INTO scores (room_id, player_id, round_number, score) VALUES (?, ?, ?, ?)`,
-);
-
-const getPlayerScore = db.prepare(
-  "SELECT player_id, score FROM scores WHERE room_id = ? AND round_number = ?",
-);
-
-const getPlayerFinalScore = db.prepare(
-  "SELECT player_id, SUM(score) AS total_score FROM scores WHERE room_id = ? GROUP BY player_id",
-);
 
 // POST /room/:id/score - submit score
 router.post(

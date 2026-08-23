@@ -2,15 +2,7 @@
 
 import db from "./../database.ts";
 import { SEQUENCE_LENGTH } from "./colors.ts";
-
-// find how many submitted scores done by different player_id for this room_id
-const scoreCountQuery = db.prepare(
-  "SELECT COUNT(DISTINCT player_id) AS player_count FROM scores WHERE room_id = ? AND (? IS NULL OR round_number = ?)",
-);
-
-const playerCountQuery = db.prepare(
-  "SELECT COUNT(*) as count FROM players WHERE room_id = ?",
-);
+import { scoreCountQuery, playerCountQuery } from "./queries.ts";
 
 // how many distinct player in this room have submitted a score
 export function getSubmittedPlayerCount(
