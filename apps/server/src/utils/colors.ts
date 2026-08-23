@@ -1,4 +1,4 @@
-import { RawColor, ColorFormat } from "@cssguessr/shared-types";
+import { RawColor, ColorFormat, RGBColor } from "@cssguessr/shared-types";
 
 export const SEQUENCE_LENGTH = 10;
 
@@ -104,4 +104,19 @@ export function formatColorSequence(
   const colorSequence = colors.map((c) => formatColor(c, format));
 
   return colorSequence;
+}
+
+function calculateScore(actual: RGBColor, guess: RGBColor): number {
+  const [actualR, actualG, actualB] = actual;
+  const [guessR, guessG, guessB] = guess;
+
+  const rDiff = Math.abs(actualR - guessR);
+  const gDiff = Math.abs(actualG - guessG);
+  const bDiff = Math.abs(actualB - guessB);
+
+  const normalizedDiff = (rDiff + gDiff + bDiff) / 765;
+
+  const score = Math.max(0, Math.round((1 - normalizedDiff) * 100));
+
+  return score;
 }
