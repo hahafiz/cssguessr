@@ -34,6 +34,10 @@ export interface Room extends Omit<RoomsRow, "color_sequence"> {
   color_sequence: string[];
 }
 
+export interface RoomWithPlayer extends Room {
+  player_id: string;
+}
+
 // user input
 export interface CreateRoomInput {
   max_players?: number;
