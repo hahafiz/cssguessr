@@ -1,7 +1,9 @@
 // TODO: gameplay screen
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { type GameState } from "../../../../../packages/shared-types/game";
 import { generateRandomHex } from "../../lib/color-generator";
+import { createRoom } from "../../api/rooms";
+import type { CreateRoomInput } from "@cssguessr/shared-types";
 
 export function Gameplay({ user, color, score, round }: GameState) {
   const [backgroundColor, setBackgroundColor] = useState("#808080");
@@ -10,6 +12,18 @@ export function Gameplay({ user, color, score, round }: GameState) {
     const newColor = generateRandomHex();
     setBackgroundColor(newColor);
   };
+
+  useEffect(() => {
+    const testCreateRoom = async () => {
+      const room = await createRoom({ max_players: 1 });
+      console.log("room: ", room);
+
+      const playerId = room.player_id;
+      const colors = room.color_sequence;
+      console.log(playerId, colors);
+    };
+    testCreateRoom();
+  }, []);
 
   return (
     <div className="h-screen py-16 px-8" style={{ backgroundColor }}>
