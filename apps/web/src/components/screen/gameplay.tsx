@@ -1,12 +1,22 @@
 // TODO: gameplay screen
 import { useEffect, useState } from "react";
 import { createRoom } from "../../api/rooms";
-import { type RoomWithPlayer } from "@cssguessr/shared-types";
+import type { RGBColor, RoomWithPlayer } from "@cssguessr/shared-types";
 import { ColorSwatch } from "../ColorSwatch";
+import { GuessInput } from "../GuessInput";
 
 export function Gameplay() {
   const [room, setRoom] = useState<RoomWithPlayer | null>(null);
   const [currentRound, setCurrentRound] = useState(1);
+  const [rgbGuess, setRgbGuess] = useState<RGBColor>([128, 128, 128]);
+
+  const handleSliderChange = (index: number, newValue: number) => {
+    setRgbGuess((prev) => {
+      const nextGuess = [...prev] as RGBColor;
+      nextGuess[index] = newValue;
+      return nextGuess;
+    });
+  };
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -22,5 +32,10 @@ export function Gameplay() {
 
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
 
-  return <ColorSwatch color={backgroundColor} />;
+  return (
+    <>
+      <ColorSwatch color={backgroundColor} />
+      <GuessInput values={rgbGuess} onSliderChange={handleSliderChange} />
+    </>
+  );
 }
