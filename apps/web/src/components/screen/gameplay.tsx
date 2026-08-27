@@ -1,34 +1,26 @@
 // TODO: gameplay screen
 import { useEffect, useState } from "react";
-// import { type GameState } from "../../../../../packages/shared-types/game";
-import { generateRandomHex } from "../../lib/color-generator";
 import { createRoom } from "../../api/rooms";
-import type { CreateRoomInput } from "@cssguessr/shared-types";
+import { type RoomWithPlayer } from "@cssguessr/shared-types";
+import { ColorSwatch } from "../ColorSwatch";
 
-export function Gameplay({ user, color, score, round }: GameState) {
-  const [backgroundColor, setBackgroundColor] = useState("#808080");
-
-  const handleColorChange = () => {
-    const newColor = generateRandomHex();
-    setBackgroundColor(newColor);
-  };
+export function Gameplay() {
+  const [room, setRoom] = useState<RoomWithPlayer | null>(null);
+  const [currentRound, setCurrentRound] = useState(1);
 
   useEffect(() => {
-    const testCreateRoom = async () => {
-      const room = await createRoom({ max_players: 1 });
-      console.log("room: ", room);
-
-      const playerId = room.player_id;
-      const colors = room.color_sequence;
-      console.log(playerId, colors);
+    const fetchRoom = async () => {
+      const newRoom = await createRoom({ max_players: 1 });
+      setRoom(newRoom);
     };
-    testCreateRoom();
+    fetchRoom();
   }, []);
 
-  return (
-    <div className="h-screen py-16 px-8" style={{ backgroundColor }}>
-      <div className="bg-slate-50 p-2 px-8 rounded-full text-xl">CSSGuessr</div>
-      <button onClick={handleColorChange}>Change Color</button>
-    </div>
-  );
+  if (room === null) {
+    return <p>Loading room..</p>;
+  }
+
+  const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
+
+  return <ColorSwatch color={backgroundColor} />;
 }

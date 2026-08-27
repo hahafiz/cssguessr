@@ -1,4 +1,4 @@
-import { Gameplay } from "./components/screen/gameplay";
+import { Gameplay } from "./components/screen/Gameplay";
 
 function App() {
   return <Gameplay />;
