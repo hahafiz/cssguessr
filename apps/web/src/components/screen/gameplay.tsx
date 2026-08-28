@@ -1,9 +1,10 @@
 // TODO: gameplay screen
 import { useEffect, useState } from "react";
-import { createRoom } from "../../api/rooms";
+import { createRoom, submitScore } from "../../api/rooms";
 import type { RGBColor, RoomWithPlayer } from "@cssguessr/shared-types";
 import { ColorSwatch } from "../ColorSwatch";
 import { GuessInput } from "../GuessInput";
+import { Button } from "../ui/button/button";
 
 export function Gameplay() {
   const [room, setRoom] = useState<RoomWithPlayer | null>(null);
@@ -30,12 +31,19 @@ export function Gameplay() {
     return <p>Loading room..</p>;
   }
 
+  const onSubmit = async () => {
+    await submitScore(room.id, room.player_id, currentRound, rgbGuess);
+  };
+
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
 
   return (
     <>
       <ColorSwatch color={backgroundColor} />
       <GuessInput values={rgbGuess} onSliderChange={handleSliderChange} />
+      <Button type="submit" onClick={onSubmit}>
+        Guess
+      </Button>
     </>
   );
 }
