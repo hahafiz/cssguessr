@@ -52,3 +52,9 @@ export interface PlayerWithRoom {
   started_at: string | null;
   created_at: string;
 }
+
+export interface SubmitScoreResult {
+  changes: number;
+  lastInsertRowId: number;
+  score: number;
+}
