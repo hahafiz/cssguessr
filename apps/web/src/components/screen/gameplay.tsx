@@ -1,16 +1,17 @@
 // TODO: gameplay screen
 import { useEffect, useState } from "react";
 import { createRoom, submitScore } from "../../api/rooms";
-import type { RGBColor, RoomWithPlayer } from "@cssguessr/shared-types";
+import type { RGBColor, RoomWithPlayer, Phase } from "@cssguessr/shared-types";
 import { ColorSwatch } from "../ColorSwatch";
 import { GuessInput } from "../GuessInput";
 import { Button } from "../ui/button/button";
 
 export function Gameplay() {
   const [room, setRoom] = useState<RoomWithPlayer | null>(null);
-  const [currentRound, setCurrentRound] = useState(1);
+  const [currentRound, setCurrentRound] = useState<number>(1);
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([128, 128, 128]);
   const [score, setScore] = useState<number>(0);
+  const [phase, setPhase] = useState<Phase>("guessing");
 
   const handleSliderChange = (index: number, newValue: number) => {
     setRgbGuess((prev) => {
@@ -40,17 +41,43 @@ export function Gameplay() {
       rgbGuess,
     );
     setScore(res.score);
+    setPhase("revealed");
   };
+
+  const onNextRound = () => {
+    setCurrentRound(currentRound + 1);
+    setPhase("guessing");
+    setRgbGuess([128, 128, 128]);
+  };
+
+  const onContinue = () => {};
 
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
 
   return (
     <>
-      <ColorSwatch color={backgroundColor} />
-      <GuessInput values={rgbGuess} onSliderChange={handleSliderChange} />
-      <Button type="submit" onClick={onSubmit}>
-        Guess
-      </Button>
+      {phase === "guessing" ? (
+        <div>
+          <ColorSwatch color={backgroundColor} />
+          <GuessInput values={rgbGuess} onSliderChange={handleSliderChange} />
+          <Button type="submit" onClick={onSubmit}>
+            Guess
+          </Button>
+        </div>
+      ) : (
+        <div>
+          <p>{score}</p>
+          {currentRound < room.color_sequence.length ? (
+            <Button variant="primary" onClick={onNextRound}>
+              Next Round
+            </Button>
+          ) : (
+            <Button variant="primary" onClick={onContinue}>
+              Continue
+            </Button>
+          )}
+        </div>
+      )}
     </>
   );
 }
