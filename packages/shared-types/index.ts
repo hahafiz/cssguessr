@@ -58,3 +58,5 @@ export interface SubmitScoreResult {
   lastInsertRowId: number;
   score: number;
 }
+
+export type Phase = "guessing" | "revealed";
