@@ -10,6 +10,7 @@ export function Gameplay() {
   const [room, setRoom] = useState<RoomWithPlayer | null>(null);
   const [currentRound, setCurrentRound] = useState(1);
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([128, 128, 128]);
+  const [score, setScore] = useState<number>(0);
 
   const handleSliderChange = (index: number, newValue: number) => {
     setRgbGuess((prev) => {
@@ -32,7 +33,13 @@ export function Gameplay() {
   }
 
   const onSubmit = async () => {
-    await submitScore(room.id, room.player_id, currentRound, rgbGuess);
+    const res = await submitScore(
+      room.id,
+      room.player_id,
+      currentRound,
+      rgbGuess,
+    );
+    setScore(res.score);
   };
 
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
