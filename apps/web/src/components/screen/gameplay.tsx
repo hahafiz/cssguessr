@@ -5,6 +5,7 @@ import type { RGBColor, RoomWithPlayer, Phase } from "@cssguessr/shared-types";
 import { ColorSwatch } from "../ColorSwatch";
 import { GuessInput } from "../GuessInput";
 import { Button } from "../ui/button/button";
+import { GameOver } from "./GameOver";
 
 export function Gameplay() {
   const [room, setRoom] = useState<RoomWithPlayer | null>(null);
@@ -33,6 +34,8 @@ export function Gameplay() {
     return <p>Loading room..</p>;
   }
 
+  const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
+
   const onSubmit = async () => {
     const res = await submitScore(
       room.id,
@@ -50,9 +53,13 @@ export function Gameplay() {
     setRgbGuess([128, 128, 128]);
   };
 
-  const onContinue = () => {};
+  const onContinue = () => {
+    setPhase("complete");
+  };
 
-  const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
+  if (phase === "complete") {
+    return <GameOver />;
+  }
 
   return (
     <>
