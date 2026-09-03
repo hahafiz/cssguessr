@@ -49,3 +49,17 @@ export async function submitScore(
 
   return res.json();
 }
+
+export async function getResults(roomId: string) {
+  const res = await fetch(`${API_URL}/room/${roomId}/results`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(errorBody?.error ?? "Failed get results");
+  }
+
+  return res.json();
+}
