@@ -59,4 +59,4 @@ export interface SubmitScoreResult {
   score: number;
 }
 
-export type Phase = "guessing" | "revealed";
+export type Phase = "guessing" | "revealed" | "complete";
