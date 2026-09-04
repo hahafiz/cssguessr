@@ -58,7 +58,7 @@ export function Gameplay() {
   };
 
   if (phase === "complete") {
-    return <GameOver />;
+    return <GameOver roomId={room.id} playerId={room.player_id} />;
   }
 
   return (
