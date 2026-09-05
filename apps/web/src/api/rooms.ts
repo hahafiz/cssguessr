@@ -1,5 +1,6 @@
 import type {
   CreateRoomInput,
+  GetResultsResponse,
   RGBColor,
   RoomWithPlayer,
   SubmitScoreResult,
@@ -50,7 +51,7 @@ export async function submitScore(
   return res.json();
 }
 
-export async function getResults(roomId: string) {
+export async function getResults(roomId: string): Promise<GetResultsResponse> {
   const res = await fetch(`${API_URL}/room/${roomId}/results`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
