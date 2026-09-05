@@ -3,15 +3,14 @@
 // TODO: share button
 
 import { useEffect, useState } from "react";
-import { getResults } from "../../api/rooms";\
+import { getResults } from "../../api/rooms";
+import type {
+  GetResultsResponse,
+  GameOverProps,
+} from "@cssguessr/shared-types";
 
-interface GameOverProps {
-  roomId: string;
-  playerId: string
-}
-
-export function GameOver({ roomId, playerId } : GameOverProps) {
-  const [result, setResult] = useState();
+export function GameOver({ roomId, playerId }: GameOverProps) {
+  const [result, setResult] = useState<GetResultsResponse | null>(null);
 
   useEffect(() => {
     const fetchResult = async () => {
