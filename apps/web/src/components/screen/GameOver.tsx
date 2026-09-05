@@ -9,7 +9,7 @@ import type {
   GameOverProps,
 } from "@cssguessr/shared-types";
 
-export function GameOver({ roomId, playerId }: GameOverProps) {
+export function GameOver({ roomId }: GameOverProps) {
   const [result, setResult] = useState<GetResultsResponse | null>(null);
 
   useEffect(() => {
@@ -20,5 +20,18 @@ export function GameOver({ roomId, playerId }: GameOverProps) {
     fetchResult();
   }, [roomId]);
 
-  return <p>Game Over screen here</p>;
+  return (
+    <>
+      {result?.status === "complete" ? (
+        result.scores.map((score) => (
+          <div key={score.player_id}>
+            <p>Player: {score.player_id}</p>
+            <p>Total score: {score.total_score}</p>
+          </div>
+        ))
+      ) : (
+        <p>Waiting for results..</p>
+      )}
+    </>
+  );
 }
