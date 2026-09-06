@@ -1,4 +1,3 @@
-// TODO: gameplay screen
 import { useEffect, useState } from "react";
 import { createRoom, submitScore } from "../../api/rooms";
 import type { RGBColor, RoomWithPlayer, Phase } from "@cssguessr/shared-types";
