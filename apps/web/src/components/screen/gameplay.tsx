@@ -13,6 +13,7 @@ export function Gameplay() {
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([128, 128, 128]);
   const [score, setScore] = useState<number>(0);
   const [phase, setPhase] = useState<Phase>("guessing");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSliderChange = (index: number, newValue: number) => {
     setRgbGuess((prev) => {
@@ -37,14 +38,20 @@ export function Gameplay() {
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
 
   const onSubmit = async () => {
-    const res = await submitScore(
-      room.id,
-      room.player_id,
-      currentRound,
-      rgbGuess,
-    );
-    setScore(res.score);
-    setPhase("revealed");
+    setIsSubmitting(true);
+    try {
+      const res = await submitScore(
+        room.id,
+        room.player_id,
+        currentRound,
+        rgbGuess,
+      );
+
+      setScore(res.score);
+      setPhase("revealed");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const onNextRound = () => {
@@ -67,8 +74,8 @@ export function Gameplay() {
         <div>
           <ColorSwatch color={backgroundColor} />
           <GuessInput values={rgbGuess} onSliderChange={handleSliderChange} />
-          <Button type="submit" onClick={onSubmit}>
-            Guess
+          <Button type="submit" onClick={onSubmit} disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : "Guess"}
           </Button>
         </div>
       ) : (
