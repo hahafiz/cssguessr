@@ -76,3 +76,21 @@ export interface ResultsComplete {
 }
 
 export type GetResultsResponse = ResultsWaiting | ResultsComplete;
+
+export interface ColorChannel {
+  label: string;
+  min: number;
+  max: number;
+}
+
+export interface SliderProps {
+  values: RGBColor;
+  channels: ColorChannel[];
+  onSliderChange: (index: number, value: number) => void;
+}
+
+export const RGB_CHANNELS: ColorChannel[] = [
+  { label: "Red", min: 0, max: 255 },
+  { label: "Green", min: 0, max: 255 },
+  { label: "Blue", min: 0, max: 255 },
+];

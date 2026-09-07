@@ -1,10 +1,6 @@
-import type { RGBColor } from "@cssguessr/shared-types";
+import { type SliderProps } from "@cssguessr/shared-types";
 
-interface SliderProps {
-  values: RGBColor;
-  onSliderChange: (index: number, value: number) => void;
-}
-export function GuessInput({ values, onSliderChange }: SliderProps) {
+export function GuessInput({ values, channels, onSliderChange }: SliderProps) {
   return (
     <div
       style={{
@@ -16,12 +12,12 @@ export function GuessInput({ values, onSliderChange }: SliderProps) {
       {values.map((value, index) => (
         <div key={index} style={{ marginBottom: "12px" }}>
           <label>
-            Slider {index + 1}: {value}
+            {channels[index].label} : {value}
           </label>
           <input
             type="range"
-            min="0"
-            max="255"
+            min={channels[index].min}
+            max={channels[index].max}
             value={value}
             onChange={(e) => onSliderChange(index, Number(e.target.value))}
           />

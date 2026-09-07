@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import { createRoom, submitScore } from "../../api/rooms";
-import type { RGBColor, RoomWithPlayer, Phase } from "@cssguessr/shared-types";
+import {
+  type RGBColor,
+  type RoomWithPlayer,
+  type Phase,
+  RGB_CHANNELS,
+} from "@cssguessr/shared-types";
 import { ColorSwatch } from "../ColorSwatch";
 import { GuessInput } from "../GuessInput";
-import { Button } from "../ui/button/button";
+import { Button } from "../ui/button/Button";
 import { GameOver } from "./GameOver";
 
 export function Gameplay() {
@@ -72,7 +77,11 @@ export function Gameplay() {
       {phase === "guessing" ? (
         <div>
           <ColorSwatch color={backgroundColor} />
-          <GuessInput values={rgbGuess} onSliderChange={handleSliderChange} />
+          <GuessInput
+            values={rgbGuess}
+            channels={RGB_CHANNELS}
+            onSliderChange={handleSliderChange}
+          />
           <Button type="submit" onClick={onSubmit} disabled={isSubmitting}>
             {isSubmitting ? "Submitting..." : "Guess"}
           </Button>
