@@ -116,6 +116,7 @@ export function calculateScore(actual: RGBColor, guess: RGBColor): number {
 
   const normalizedDiff = (rDiff + gDiff + bDiff) / 765;
 
+  // closer will get 100 points
   const score = Math.max(0, Math.round((1 - normalizedDiff) * 100));
 
   return score;
