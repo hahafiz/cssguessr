@@ -9,7 +9,7 @@ import type {
   GameOverProps,
 } from "@cssguessr/shared-types";
 
-export function GameOver({ roomId }: GameOverProps) {
+export default function GameOver({ roomId }: GameOverProps) {
   const [result, setResult] = useState<GetResultsResponse | null>(null);
 
   useEffect(() => {

@@ -9,9 +9,9 @@ import {
 import { ColorSwatch } from "../ColorSwatch";
 import { GuessInput } from "../GuessInput";
 import { Button } from "../ui/button/Button";
-import { GameOver } from "./GameOver";
+import GameOver from "./GameOver";
 
-export function Gameplay() {
+export default function Gameplay() {
   const [room, setRoom] = useState<RoomWithPlayer | null>(null);
   const [currentRound, setCurrentRound] = useState<number>(1);
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([128, 128, 128]);
