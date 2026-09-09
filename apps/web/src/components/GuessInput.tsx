@@ -4,9 +4,7 @@ export function GuessInput({ values, channels, onSliderChange }: SliderProps) {
   return (
     <div
       style={{
-        border: "1px solid #ccc",
         padding: "16px",
-        borderRadius: "8px",
       }}
     >
       {values.map((value, index) => (

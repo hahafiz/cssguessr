@@ -14,7 +14,7 @@ import GameOver from "./GameOver";
 export default function Gameplay() {
   const [room, setRoom] = useState<RoomWithPlayer | null>(null);
   const [currentRound, setCurrentRound] = useState<number>(1);
-  const [rgbGuess, setRgbGuess] = useState<RGBColor>([128, 128, 128]);
+  const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
   const [score, setScore] = useState<number>(0);
   const [phase, setPhase] = useState<Phase>("guessing");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,7 +61,7 @@ export default function Gameplay() {
   const onNextRound = () => {
     setCurrentRound(currentRound + 1);
     setPhase("guessing");
-    setRgbGuess([128, 128, 128]);
+    setRgbGuess([0, 0, 0]);
   };
 
   const onContinue = () => {
@@ -77,18 +77,25 @@ export default function Gameplay() {
       {phase === "guessing" ? (
         <div>
           <ColorSwatch color={backgroundColor} />
-          <GuessInput
-            values={rgbGuess}
-            channels={RGB_CHANNELS}
-            onSliderChange={handleSliderChange}
-          />
-          <Button type="submit" onClick={onSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Guess"}
-          </Button>
+          <div className="flex flex-col justify-center rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white">
+            <p className="mx-auto">
+              Round: {currentRound} / {room.color_sequence.length}
+            </p>
+            <GuessInput
+              values={rgbGuess}
+              channels={RGB_CHANNELS}
+              onSliderChange={handleSliderChange}
+            />
+            <Button type="submit" onClick={onSubmit} disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Guess"}
+            </Button>
+          </div>
         </div>
       ) : (
         <div>
           <p>{score}</p>
+          <p>Your guess: rgb({rgbGuess.join(", ")})</p>
+          <p>Answer: {room.color_sequence[currentRound - 1]}</p>
           {currentRound < room.color_sequence.length ? (
             <Button variant="primary" onClick={onNextRound}>
               Next Round

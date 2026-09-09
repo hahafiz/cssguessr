@@ -4,12 +4,15 @@
 
 import { useEffect, useState } from "react";
 import { getResults } from "../../api/rooms";
+import { Button } from "../ui/button/Button";
 import type {
   GetResultsResponse,
   GameOverProps,
 } from "@cssguessr/shared-types";
+import { useNavigate } from "react-router";
 
 export default function GameOver({ roomId }: GameOverProps) {
+  const navigate = useNavigate();
   const [result, setResult] = useState<GetResultsResponse | null>(null);
 
   useEffect(() => {
@@ -26,7 +29,10 @@ export default function GameOver({ roomId }: GameOverProps) {
         result.scores.map((score) => (
           <div key={score.player_id}>
             <p>Player: {score.player_id}</p>
-            <p>Total score: {score.total_score}</p>
+            <p>Your score: {score.total_score} / 1000</p>
+            <Button variant="primary" onClick={() => navigate("/")}>
+              Return to Main Menu
+            </Button>
           </div>
         ))
       ) : (
