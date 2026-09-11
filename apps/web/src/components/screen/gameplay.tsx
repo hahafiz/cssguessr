@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createRoom, submitScore } from "../../api/rooms";
+import { getRoom, submitScore } from "../../api/rooms";
 import {
   type RGBColor,
   type RoomWithPlayer,
@@ -10,6 +10,7 @@ import { ColorSwatch } from "../ColorSwatch";
 import { GuessInput } from "../GuessInput";
 import { Button } from "../ui/button/Button";
 import GameOver from "./GameOver";
+import { useParams } from "react-router";
 
 export default function Gameplay() {
   const [room, setRoom] = useState<RoomWithPlayer | null>(null);
@@ -18,6 +19,8 @@ export default function Gameplay() {
   const [score, setScore] = useState<number>(0);
   const [phase, setPhase] = useState<Phase>("guessing");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { roomId } = useParams();
 
   const handleSliderChange = (index: number, newValue: number) => {
     setRgbGuess((prev) => {
@@ -29,11 +32,13 @@ export default function Gameplay() {
 
   useEffect(() => {
     const fetchRoom = async () => {
-      const newRoom = await createRoom({ max_players: 1 });
-      setRoom(newRoom);
+      if (roomId) {
+        const newRoom = await getRoom(roomId);
+        setRoom(newRoom);
+      }
     };
     fetchRoom();
-  }, []);
+  }, [roomId]);
 
   if (room === null) {
     return <p>Loading room..</p>;
