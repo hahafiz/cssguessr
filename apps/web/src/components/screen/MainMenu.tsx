@@ -6,10 +6,14 @@ export default function MainMenu() {
 
   return (
     <>
-      <Button variant="primary" onClick={() => navigate("/solo")}>
+      <Button variant="primary" onClick={() => navigate("/setup?mode=solo")}>
         Solo Mode
       </Button>
-      <Button variant="primary" disabled>
+      <Button
+        variant="primary"
+        onClick={() => navigate("/setup?mode=duel")}
+        disabled
+      >
         Duel Mode
       </Button>
     </>
