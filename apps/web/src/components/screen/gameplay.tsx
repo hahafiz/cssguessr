@@ -11,6 +11,7 @@ import { GuessInput } from "../GuessInput";
 import { Button } from "../ui/button/Button";
 import GameOver from "./GameOver";
 import { useParams } from "react-router";
+import { getStoredPlayerId } from "../../api/playerId";
 
 export default function Gameplay() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -21,6 +22,7 @@ export default function Gameplay() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { roomId } = useParams();
+  const playerId = roomId ? getStoredPlayerId(roomId) : null;
 
   const handleSliderChange = (index: number, newValue: number) => {
     setRgbGuess((prev) => {
@@ -44,17 +46,16 @@ export default function Gameplay() {
     return <p>Loading room..</p>;
   }
 
+  if (!playerId) {
+    return <p>Could not find player identity for this room</p>;
+  }
+
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
 
   const onSubmit = async () => {
     setIsSubmitting(true);
     try {
-      const res = await submitScore(
-        room.id,
-        room.player_id,
-        currentRound,
-        rgbGuess,
-      );
+      const res = await submitScore(room.id, playerId, currentRound, rgbGuess);
 
       setScore(res.score);
       setPhase("revealed");
@@ -74,7 +75,7 @@ export default function Gameplay() {
   };
 
   if (phase === "complete") {
-    return <GameOver roomId={room.id} playerId={room.player_id} />;
+    return <GameOver roomId={room.id} playerId={playerId} />;
   }
 
   return (
