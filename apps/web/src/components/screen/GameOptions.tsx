@@ -63,10 +63,14 @@ export default function GameOptions() {
         <div>
           <p>Select RGB input format</p>
           <div>
-            <Button variant="primary" value="slider">
+            <Button variant="primary" onClick={() => setInputMethod("slider")}>
               Slider
             </Button>
-            <Button variant="primary" value="hex" disabled>
+            <Button
+              variant="primary"
+              onClick={() => setInputMethod("hex")}
+              disabled
+            >
               Hex
             </Button>
           </div>
@@ -80,7 +84,7 @@ export default function GameOptions() {
             id="max-player"
             type="number"
             value={maxPlayers}
-            onChange={() => setMaxPlayers}
+            onChange={(e) => setMaxPlayers(Number(e.target.value))}
           ></input>
         </>
       )}
