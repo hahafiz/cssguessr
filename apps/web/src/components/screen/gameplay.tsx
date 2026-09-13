@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { getRoom, submitScore } from "../../api/rooms";
 import {
   type RGBColor,
-  type RoomWithPlayer,
   type Phase,
   RGB_CHANNELS,
+  type Room,
 } from "@cssguessr/shared-types";
 import { ColorSwatch } from "../ColorSwatch";
 import { GuessInput } from "../GuessInput";
@@ -13,7 +13,7 @@ import GameOver from "./GameOver";
 import { useParams } from "react-router";
 
 export default function Gameplay() {
-  const [room, setRoom] = useState<RoomWithPlayer | null>(null);
+  const [room, setRoom] = useState<Room | null>(null);
   const [currentRound, setCurrentRound] = useState<number>(1);
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
   const [score, setScore] = useState<number>(0);
