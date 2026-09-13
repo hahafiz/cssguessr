@@ -5,11 +5,10 @@ import GameOptions from "./components/screen/GameOptions";
 
 const router = createBrowserRouter([
   { path: "/", element: <MainMenu /> },
-  { path: "/solo/setup", element: <GameOptions /> },
+  { path: "/setup", element: <GameOptions /> },
   { path: "/solo/:roomId", element: <Gameplay /> },
-  { path: "/duel/setup", element: <GameOptions /> },
   { path: "/duel/lobby/:roomId" }, // placeholder for lobby
-  { path: "/room/:roomId" }, // gameplay mode
+  { path: "/duel/:roomId", element: <Gameplay /> }, // gameplay mode
 ]);
 
 function App() {
