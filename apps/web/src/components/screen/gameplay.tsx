@@ -99,18 +99,21 @@ export default function Gameplay() {
         </div>
       ) : (
         <div>
-          <p>{score}</p>
-          <p>Your guess: rgb({rgbGuess.join(", ")})</p>
-          <p>Answer: {room.color_sequence[currentRound - 1]}</p>
-          {currentRound < room.color_sequence.length ? (
-            <Button variant="primary" onClick={onNextRound}>
-              Next Round
-            </Button>
-          ) : (
-            <Button variant="primary" onClick={onContinue}>
-              Continue
-            </Button>
-          )}
+          <ColorSwatch color={backgroundColor} />
+          <div className="flex flex-col gap-2 justify-center rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-4">
+            <p>Score: {score}</p>
+            <p>Your guess: rgb({rgbGuess.join(", ")})</p>
+            <p>Answer: {room.color_sequence[currentRound - 1]}</p>
+            {currentRound < room.color_sequence.length ? (
+              <Button variant="primary" onClick={onNextRound}>
+                Next Round
+              </Button>
+            ) : (
+              <Button variant="primary" onClick={onContinue}>
+                Continue
+              </Button>
+            )}
+          </div>
         </div>
       )}
     </>
