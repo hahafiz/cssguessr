@@ -6,16 +6,18 @@ export default function MainMenu() {
 
   return (
     <>
-      <Button variant="primary" onClick={() => navigate("/setup?mode=solo")}>
-        Solo Mode
-      </Button>
-      <Button
-        variant="primary"
-        onClick={() => navigate("/setup?mode=duel")}
-        disabled
-      >
-        Duel Mode
-      </Button>
+      <div className="flex flex-col gap-4 w-28 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <Button variant="primary" onClick={() => navigate("/setup?mode=solo")}>
+          Solo Mode
+        </Button>
+        <Button
+          variant="primary"
+          onClick={() => navigate("/setup?mode=duel")}
+          disabled
+        >
+          Duel Mode
+        </Button>
+      </div>
     </>
   );
 }
