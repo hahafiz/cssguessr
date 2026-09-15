@@ -43,55 +43,71 @@ export default function GameOptions() {
 
   return (
     <>
-      <div>
-        <p>Select color mode</p>
-        <div>
-          <Button variant="primary" onClick={() => setColorFormat("rgb")}>
-            RGB
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => setColorFormat("hsl")}
-            disabled
-          >
-            HSL
-          </Button>
-        </div>
-      </div>
-
-      {colorFormat === "rgb" && (
-        <div>
-          <p>Select RGB input format</p>
-          <div>
-            <Button variant="primary" onClick={() => setInputMethod("slider")}>
-              Slider
+      <div className="flex flex-col gap-4 w-48 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="flex flex-col gap-2">
+          <p>Select color mode</p>
+          <div className="flex gap-2">
+            <Button
+              variant="secondary"
+              className="flex-1"
+              onClick={() => setColorFormat("rgb")}
+            >
+              RGB
             </Button>
             <Button
-              variant="primary"
-              onClick={() => setInputMethod("hex")}
+              variant="secondary"
+              className="flex-1"
+              onClick={() => setColorFormat("hsl")}
               disabled
             >
-              Hex
+              HSL
             </Button>
           </div>
         </div>
-      )}
 
-      {mode === "duel" && (
-        <>
-          <label>Max player</label>
-          <input
-            id="max-player"
-            type="number"
-            value={maxPlayers}
-            onChange={(e) => setMaxPlayers(Number(e.target.value))}
-          ></input>
-        </>
-      )}
+        {colorFormat === "rgb" && (
+          <div className="flex flex-col gap-2">
+            <p>Select RGB input format</p>
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                className="flex-1"
+                onClick={() => setInputMethod("slider")}
+              >
+                Slider
+              </Button>
+              <Button
+                variant="secondary"
+                className="flex-1"
+                onClick={() => setInputMethod("hex")}
+                disabled
+              >
+                Hex
+              </Button>
+            </div>
+          </div>
+        )}
 
-      <Button variant="primary" onClick={onCreateGame} disabled={isSubmitting}>
-        Start Game
-      </Button>
+        {mode === "duel" && (
+          <>
+            <label>Max player</label>
+            <input
+              id="max-player"
+              type="number"
+              value={maxPlayers}
+              onChange={(e) => setMaxPlayers(Number(e.target.value))}
+            ></input>
+          </>
+        )}
+
+        <Button
+          variant="primary"
+          onClick={onCreateGame}
+          disabled={isSubmitting}
+        >
+          Start Game
+        </Button>
+      </div>
     </>
   );
 }
