@@ -27,7 +27,10 @@ export default function GameOver({ roomId }: GameOverProps) {
     <>
       {result?.status === "complete" ? (
         result.scores.map((score) => (
-          <div key={score.player_id}>
+          <div
+            key={score.player_id}
+            className="flex flex-col gap-2 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-4"
+          >
             <p>Player: {score.player_id}</p>
             <p>Your score: {score.total_score} / 1000</p>
             <Button variant="primary" onClick={() => navigate("/")}>
