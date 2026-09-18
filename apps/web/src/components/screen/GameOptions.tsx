@@ -45,7 +45,7 @@ export default function GameOptions() {
     <>
       <div className="flex flex-col gap-4 w-48 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="flex flex-col gap-2">
-          <p>Select color mode</p>
+          <p className="text-white">Select color mode</p>
           <div className="flex gap-2">
             <Button
               variant="secondary"
@@ -67,7 +67,7 @@ export default function GameOptions() {
 
         {colorFormat === "rgb" && (
           <div className="flex flex-col gap-2">
-            <p>Select RGB input format</p>
+            <p className="text-white">Select RGB input format</p>
             <div className="flex gap-2">
               <Button
                 variant="secondary"

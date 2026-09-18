@@ -81,9 +81,9 @@ export default function Gameplay() {
   return (
     <>
       {phase === "guessing" ? (
-        <div>
+        <div className="flex flex-col gap-4 items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <ColorSwatch color={backgroundColor} />
-          <div className="flex flex-col justify-center rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white">
+          <div className="flex flex-col justify-center rounded-lg bg-white">
             <p className="mx-auto">
               Round: {currentRound} / {room.color_sequence.length}
             </p>
@@ -98,9 +98,9 @@ export default function Gameplay() {
           </div>
         </div>
       ) : (
-        <div>
+        <div className="flex flex-col gap-4 items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <ColorSwatch color={backgroundColor} />
-          <div className="flex flex-col gap-2 justify-center rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-4">
+          <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
             <p>Score: {score}</p>
             <p>Your guess: rgb({rgbGuess.join(", ")})</p>
             <p>Answer: {room.color_sequence[currentRound - 1]}</p>
