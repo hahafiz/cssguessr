@@ -190,4 +190,23 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   res.json(parseRow);
 });
 
+// GET /room:id/players
+router.get(
+  "/:id/players",
+  async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+
+    if (typeof id !== "string") {
+      res.status(400).json({ error: "ID is not a string" });
+      return;
+    }
+
+    try {
+    } catch (err) {
+      res.status(500).json({ error: "Error" });
+      return;
+    }
+  },
+);
+
 export default router;
