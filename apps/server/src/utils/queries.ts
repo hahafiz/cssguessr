@@ -8,6 +8,11 @@ export const insertQuery = db.prepare(
 export const getPlayerScore = db.prepare(
   "SELECT player_id, score FROM scores WHERE room_id = ? AND round_number = ?",
 );
+
+export const getPlayerIsHost = db.prepare(
+  "SELECT player_id, is_host FROM players WHERE room_id = ?",
+);
+
 export const getPlayerFinalScore = db.prepare(
   "SELECT player_id, SUM(score) AS total_score FROM scores WHERE room_id = ? GROUP BY player_id",
 );
