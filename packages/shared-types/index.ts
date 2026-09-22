@@ -94,3 +94,8 @@ export const RGB_CHANNELS: ColorChannel[] = [
   { label: "Green", min: 0, max: 255 },
   { label: "Blue", min: 0, max: 255 },
 ];
+
+export interface GetPlayerHost {
+  player_id: string;
+  is_host: number;
+}
