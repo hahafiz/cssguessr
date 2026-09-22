@@ -16,6 +16,7 @@ import {
   insertPlayer,
   roomCapacity,
   changeRoomStatus,
+  getPlayerIsHost,
 } from "../utils/queries.ts";
 
 const router = Router();
@@ -202,10 +203,16 @@ router.get(
     }
 
     try {
+      getPlayerIsHost.all(id);
+      if (!getRoomId.get(id)) {
+        res.status(404).json({ error: "Room not found" });
+      }
     } catch (err) {
       res.status(500).json({ error: "Error" });
       return;
     }
+
+    res.json();
   },
 );
 
