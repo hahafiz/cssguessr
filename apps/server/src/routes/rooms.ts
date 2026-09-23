@@ -6,6 +6,7 @@ import {
   RoomsRow,
   CreateRoomInput,
   PlayerWithRoom,
+  GetPlayerHost,
 } from "@cssguessr/shared-types";
 import crypto from "crypto";
 import { generateRawColorSequence } from "../utils/colors.ts";
@@ -20,6 +21,8 @@ import {
 } from "../utils/queries.ts";
 
 const router = Router();
+const IS_HOST = 1;
+const IS_NOT_HOST = 0;
 
 // POST /room - create new room
 router.post("/", async (req: Request, res: Response): Promise<void> => {
@@ -46,7 +49,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     db.exec("BEGIN"); // starts transaction
     insertRoom.run(roomID, colorJsonStr, max_players); // insert newly created roomID to database
     newRoomRow = getRoomId.get(roomID) as RoomsRow | undefined; // fetched the newly created room as raw data
-    insertPlayer.run(playerID, roomID, 1);
+    insertPlayer.run(playerID, roomID, IS_HOST);
     db.exec("COMMIT");
   } catch (err) {
     db.exec("ROLLBACK");
@@ -60,7 +63,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   }
 
   const room: Room = parseRoomRow(newRoomRow); // parse the raw data so FE can read
-  res.json({ ...room, player_id: playerID });
+  res.json({ ...room, player_id: playerID, is_host: IS_HOST });
 });
 
 // POST /room/:id - join room
@@ -94,14 +97,14 @@ router.post("/:id", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    insertPlayer.run(playerID, room_id, 0);
+    insertPlayer.run(playerID, room_id, IS_NOT_HOST);
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
     return;
   }
 
   const room: Room = parseRoomRow(isRoomExist);
-  res.json({ ...room, player_id: playerID });
+  res.json({ ...room, player_id: playerID, is_host: IS_NOT_HOST });
 });
 
 // POST /room/:id - start room
@@ -191,7 +194,7 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   res.json(parseRow);
 });
 
-// GET /room:id/players
+// GET /room/:id/players
 router.get(
   "/:id/players",
   async (req: Request, res: Response): Promise<void> => {
@@ -202,17 +205,20 @@ router.get(
       return;
     }
 
+    let players;
+
     try {
-      getPlayerIsHost.all(id);
       if (!getRoomId.get(id)) {
         res.status(404).json({ error: "Room not found" });
+        return;
       }
+      players = getPlayerIsHost.all(id);
     } catch (err) {
       res.status(500).json({ error: "Error" });
       return;
     }
 
-    res.json();
+    res.json(players);
   },
 );
 
