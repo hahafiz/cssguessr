@@ -1,9 +1,9 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Button } from "../ui/button/Button";
 import { getStoredPlayerId, storePlayerId } from "../../api/playerId";
 import { useEffect, useState } from "react";
-import { getRoom, joinRoom } from "../../api/rooms";
-import type { Room } from "@cssguessr/shared-types";
+import { getPlayerList, getRoom, joinRoom } from "../../api/rooms";
+import type { PlayerListItem, Room } from "@cssguessr/shared-types";
 
 export default function GameLobby() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -12,7 +12,10 @@ export default function GameLobby() {
   const [playerId, setPlayerId] = useState<string | null>(() =>
     roomId ? getStoredPlayerId(roomId) : null,
   );
+  const [playerList, setPlayerList] = useState<PlayerListItem[]>([]);
+  const navigate = useNavigate();
 
+  // join room
   useEffect(() => {
     const fetchRoom = async () => {
       if (roomId) {
@@ -30,11 +33,29 @@ export default function GameLobby() {
     fetchRoom();
   }, [roomId, playerId]);
 
+  // polling - all players will call this function to BE
   useEffect(() => {
-    const interval = setInterval(() => {}, 3000);
+    const interval = setInterval(() => {
+      const fetchGame = async () => {
+        if (roomId) {
+          const playersList = await getPlayerList(roomId);
+          setPlayerList(playersList);
+          const room = await getRoom(roomId);
+          setRoomStatus(room.status);
+        }
+      };
+      fetchGame();
+    }, 3000);
 
     return () => clearInterval(interval);
-  });
+  }, [roomId]);
+
+  // navigate once the room status is set to active
+  useEffect(() => {
+    if (roomStatus == "active") {
+      navigate("/room/" + roomId);
+    }
+  }, [roomStatus, roomId, navigate]);
 
   return (
     <>

@@ -1,6 +1,7 @@
 import type {
   CreateRoomInput,
   GetResultsResponse,
+  PlayerListItem,
   RGBColor,
   RoomWithPlayer,
   SubmitScoreResult,
@@ -93,7 +94,7 @@ export async function getRoom(roomId: string): Promise<RoomWithPlayer> {
   return res.json();
 }
 
-export async function getPlayerList(roomId: string): Promise<RoomWithPlayer> {
+export async function getPlayerList(roomId: string): Promise<PlayerListItem[]> {
   const res = await fetch(`${API_URL}/room/${roomId}/players`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
