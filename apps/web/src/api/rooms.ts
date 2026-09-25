@@ -92,3 +92,17 @@ export async function getRoom(roomId: string): Promise<RoomWithPlayer> {
 
   return res.json();
 }
+
+export async function getPlayerList(roomId: string): Promise<RoomWithPlayer> {
+  const res = await fetch(`${API_URL}/room/${roomId}/players`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(errorBody?.error ?? "Failed to fetch player list");
+  }
+
+  return res.json();
+}
