@@ -6,7 +6,6 @@ import {
   RoomsRow,
   CreateRoomInput,
   PlayerWithRoom,
-  GetPlayerHost,
 } from "@cssguessr/shared-types";
 import crypto from "crypto";
 import { generateRawColorSequence } from "../utils/colors.ts";
@@ -194,7 +193,7 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   res.json(parseRow);
 });
 
-// GET /room/:id/players
+// GET /room/:id/players - player list
 router.get(
   "/:id/players",
   async (req: Request, res: Response): Promise<void> => {
