@@ -72,14 +72,16 @@ export default function GameLobby() {
   return (
     <>
       <div className="flex flex-col gap-4 w-28 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div>Invite your friends: ${window.location.href}</div>
-        <div>Room status: ${room?.max_players}</div>
-        <div className="flex flex-col gap-4">
+        <div className="text-white">
+          Invite your friends: {window.location.href}
+        </div>
+        <div className="text-white">Room status: {room?.max_players}</div>
+        <div className="flex flex-col gap-4 text-white">
           <h3>Players</h3>
           {playerList.map((p) => (
             <div className="flex gap-2">
               <p>{p.player_id}</p>
-              {p.is_host && <strong>HOST</strong>}
+              {p.is_host ? <strong>HOST</strong> : <p>Player</p>}
             </div>
           ))}
         </div>

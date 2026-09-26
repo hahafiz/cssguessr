@@ -10,11 +10,7 @@ export default function MainMenu() {
         <Button variant="primary" onClick={() => navigate("/setup?mode=solo")}>
           Solo Mode
         </Button>
-        <Button
-          variant="primary"
-          onClick={() => navigate("/setup?mode=duel")}
-          disabled
-        >
+        <Button variant="primary" onClick={() => navigate("/setup?mode=duel")}>
           Duel Mode
         </Button>
       </div>
