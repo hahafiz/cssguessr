@@ -100,3 +100,11 @@ export interface PlayerListItem {
   player_id: string;
   is_host: number;
 }
+
+export interface GuessRoundProps {
+  backgroundColor: string;
+  roomId: string;
+  playerId: string;
+  currentRound: number;
+  onSubmitted: (score: number) => void;
+}

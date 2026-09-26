@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
-import { getRoom, submitScore } from "../../api/rooms";
-import {
-  type RGBColor,
-  type Phase,
-  RGB_CHANNELS,
-  type Room,
-} from "@cssguessr/shared-types";
+import { getRoom } from "../../api/rooms";
+import { type RGBColor, type Phase, type Room } from "@cssguessr/shared-types";
 import { ColorSwatch } from "../ColorSwatch";
-import { GuessInput } from "../GuessInput";
 import { Button } from "../ui/button/Button";
 import GameOver from "./GameOver";
 import { useParams } from "react-router";
 import { getStoredPlayerId } from "../../api/playerId";
+import GuessRound from "../GuessRound";
 
 export default function SoloGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -19,18 +14,9 @@ export default function SoloGameplay() {
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
   const [score, setScore] = useState<number>(0);
   const [phase, setPhase] = useState<Phase>("guessing");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { roomId } = useParams();
   const playerId = roomId ? getStoredPlayerId(roomId) : null;
-
-  const handleSliderChange = (index: number, newValue: number) => {
-    setRgbGuess((prev) => {
-      const nextGuess = [...prev] as RGBColor;
-      nextGuess[index] = newValue;
-      return nextGuess;
-    });
-  };
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -52,18 +38,6 @@ export default function SoloGameplay() {
 
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
 
-  const onSubmit = async () => {
-    setIsSubmitting(true);
-    try {
-      const res = await submitScore(room.id, playerId, currentRound, rgbGuess);
-
-      setScore(res.score);
-      setPhase("revealed");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const onNextRound = () => {
     setCurrentRound(currentRound + 1);
     setPhase("guessing");
@@ -81,22 +55,16 @@ export default function SoloGameplay() {
   return (
     <>
       {phase === "guessing" ? (
-        <div className="flex flex-col gap-4 items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <ColorSwatch color={backgroundColor} />
-          <div className="flex flex-col justify-center rounded-lg bg-white">
-            <p className="mx-auto">
-              Round: {currentRound} / {room.color_sequence.length}
-            </p>
-            <GuessInput
-              values={rgbGuess}
-              channels={RGB_CHANNELS}
-              onSliderChange={handleSliderChange}
-            />
-            <Button type="submit" onClick={onSubmit} disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Guess"}
-            </Button>
-          </div>
-        </div>
+        <GuessRound
+          backgroundColor={backgroundColor}
+          roomId={room.id}
+          playerId={playerId}
+          currentRound={currentRound}
+          onSubmitted={(newScore) => {
+            setScore(newScore);
+            setPhase("revealed");
+          }}
+        />
       ) : (
         <div className="flex flex-col gap-4 items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <ColorSwatch color={backgroundColor} />
