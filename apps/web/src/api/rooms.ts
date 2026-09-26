@@ -3,6 +3,7 @@ import type {
   GetResultsResponse,
   PlayerListItem,
   RGBColor,
+  Room,
   RoomWithPlayer,
   SubmitScoreResult,
 } from "@cssguessr/shared-types";
@@ -28,6 +29,20 @@ export async function createRoom(
 
 export async function joinRoom(roomId: string): Promise<RoomWithPlayer> {
   const res = await fetch(`${API_URL}/room/${roomId}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(errorBody?.error ?? "Failed to join room");
+  }
+
+  return res.json();
+}
+
+export async function startRoom(roomId: string): Promise<Room> {
+  const res = await fetch(`${API_URL}/room/${roomId}/start`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });
