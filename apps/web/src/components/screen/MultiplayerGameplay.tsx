@@ -13,7 +13,7 @@ import GameOver from "./GameOver";
 import { useParams } from "react-router";
 import { getStoredPlayerId } from "../../api/playerId";
 
-export default function Gameplay() {
+export default function MultiplayerGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
   const [currentRound, setCurrentRound] = useState<number>(1);
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
