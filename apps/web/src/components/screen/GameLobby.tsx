@@ -64,8 +64,8 @@ export default function GameLobby() {
 
   // flip room status to "active"
   const onStart = async () => {
-    if (roomId) {
-      await startRoom(roomId);
+    if (roomId && playerId) {
+      await startRoom(roomId, playerId);
     }
   };
 

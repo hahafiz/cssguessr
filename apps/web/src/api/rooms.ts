@@ -41,10 +41,14 @@ export async function joinRoom(roomId: string): Promise<RoomWithPlayer> {
   return res.json();
 }
 
-export async function startRoom(roomId: string): Promise<Room> {
+export async function startRoom(
+  roomId: string,
+  playerId: string,
+): Promise<Room> {
   const res = await fetch(`${API_URL}/room/${roomId}/start`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ player_id: playerId }),
   });
 
   if (!res.ok) {
