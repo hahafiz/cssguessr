@@ -31,7 +31,7 @@ export default function GuessRound({
     setIsSubmitting(true);
     try {
       const res = await submitScore(roomId, playerId, currentRound, rgbGuess);
-      onSubmitted(res.score);
+      onSubmitted(res.score, rgbGuess);
     } finally {
       setIsSubmitting(false);
     }

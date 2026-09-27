@@ -60,9 +60,10 @@ export default function SoloGameplay() {
           roomId={room.id}
           playerId={playerId}
           currentRound={currentRound}
-          onSubmitted={(newScore) => {
+          onSubmitted={(newScore, guess) => {
             setScore(newScore);
             setPhase("revealed");
+            setRgbGuess(guess);
           }}
         />
       ) : (
