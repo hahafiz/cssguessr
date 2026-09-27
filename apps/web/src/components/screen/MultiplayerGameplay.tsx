@@ -7,6 +7,7 @@ import GameOver from "./GameOver";
 import { useParams } from "react-router";
 import { getStoredPlayerId } from "../../api/playerId";
 import GuessRound from "../GuessRound";
+import RoundProgress from "../RoundProgress";
 
 export default function MultiplayerGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -53,7 +54,11 @@ export default function MultiplayerGameplay() {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-8 items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <RoundProgress
+        current={currentRound}
+        total={room.color_sequence.length}
+      />
       {phase === "guessing" ? (
         <GuessRound
           backgroundColor={backgroundColor}
@@ -67,7 +72,7 @@ export default function MultiplayerGameplay() {
           }}
         />
       ) : (
-        <div className="flex flex-col gap-4 items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="flex flex-col gap-4 items-center justify-center">
           <ColorSwatch color={backgroundColor} />
           <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
             <p>Score: {score}</p>
@@ -85,6 +90,6 @@ export default function MultiplayerGameplay() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
