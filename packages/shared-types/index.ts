@@ -112,3 +112,8 @@ export interface GuessRoundProps {
   currentRound: number;
   onSubmitted: (score: number, guess: RGBColor) => void;
 }
+
+export interface RoundProgressProps {
+  current: number;
+  total: number;
+}
