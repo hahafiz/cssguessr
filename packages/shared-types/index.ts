@@ -84,6 +84,10 @@ export interface ColorChannel {
   max: number;
 }
 
+export interface ColorSwatchProps {
+  color: string;
+}
+
 export interface SliderProps {
   values: RGBColor;
   channels: ColorChannel[];

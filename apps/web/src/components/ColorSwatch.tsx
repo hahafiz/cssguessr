@@ -1,6 +1,4 @@
-interface ColorSwatchProps {
-  color: string;
-}
+import type { ColorSwatchProps } from "@cssguessr/shared-types";
 
 export function ColorSwatch({ color }: ColorSwatchProps) {
   return (
