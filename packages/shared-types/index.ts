@@ -100,6 +100,8 @@ export const RGB_CHANNELS: ColorChannel[] = [
   { label: "Blue", min: 0, max: 255 },
 ];
 
+export const ROUND_DURATION_MS = 15000;
+
 export interface PlayerListItem {
   player_id: string;
   is_host: number;
