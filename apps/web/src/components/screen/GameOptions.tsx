@@ -90,11 +90,12 @@ export default function GameOptions() {
 
         {mode === "duel" && (
           <>
-            <label>Max player</label>
+            <label className="text-white">Max player</label>
             <input
               id="max-player"
               type="number"
               value={maxPlayers}
+              className="text-white"
               onChange={(e) => setMaxPlayers(Number(e.target.value))}
             ></input>
           </>

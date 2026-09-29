@@ -39,7 +39,7 @@ export default function GameOver({ roomId }: GameOverProps) {
           </div>
         ))
       ) : (
-        <p>Waiting for results..</p>
+        <p className="text-white">Waiting for results..</p>
       )}
     </>
   );
