@@ -79,7 +79,7 @@ export default function GameLobby() {
         <div className="flex flex-col gap-4 text-white">
           <h3>Players</h3>
           {playerList.map((p) => (
-            <div className="flex gap-2">
+            <div key={p.player_id} className="flex gap-2">
               <p>{p.player_id}</p>
               {p.is_host ? <strong>HOST</strong> : <p>Player</p>}
             </div>
