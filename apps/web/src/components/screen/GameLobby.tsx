@@ -90,7 +90,7 @@ export default function GameLobby() {
             Start Game
           </Button>
         ) : (
-          <p>Waiting for host to start</p>
+          <p className="text-white">Waiting for host to start</p>
         )}
       </div>
     </>
