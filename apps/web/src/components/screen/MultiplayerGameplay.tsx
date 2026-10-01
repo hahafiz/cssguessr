@@ -5,6 +5,7 @@ import {
   type Phase,
   type Room,
   ROUND_DURATION_MS,
+  REVEAL_DURATION_MS,
 } from "@cssguessr/shared-types";
 import { ColorSwatch } from "../ColorSwatch";
 import GameOver from "./GameOver";
@@ -44,8 +45,12 @@ export default function MultiplayerGameplay() {
   const startedAt = room?.started_at
     ? new Date(room.started_at.replace(" ", "T") + "Z").getTime()
     : null;
+  const elapsed = now - startedAt;
+  const totalRoundDuration = ROUND_DURATION_MS + REVEAL_DURATION_MS;
+  const remainder = elapsed % totalRoundDuration;
   const currentRound = startedAt
-    ? Math.floor((now - startedAt) / ROUND_DURATION_MS) + 1
+    ? Math.floor((now - startedAt) / (ROUND_DURATION_MS + REVEAL_DURATION_MS)) +
+      1
     : 1;
 
   console.log({ startedAt, now, currentRound, diff: now - startedAt });
