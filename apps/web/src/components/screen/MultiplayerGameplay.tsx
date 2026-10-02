@@ -17,6 +17,7 @@ import RoundProgress from "../RoundProgress";
 export default function MultiplayerGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
   const [now, setNow] = useState<number>(Date.now);
+  const [timer, setTimer] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
   const [submitted, setSubmitted] = useState<boolean>(false);
@@ -50,12 +51,15 @@ export default function MultiplayerGameplay() {
 
   let phase: Phase = "guessing";
   let currentRound = 1;
+  let elapsed;
 
   if (startedAt !== null) {
-    const elapsed = now - startedAt;
+    elapsed = now - startedAt;
     const remainder = elapsed % totalRoundDuration;
     phase = remainder < ROUND_DURATION_MS ? "guessing" : "revealed";
     currentRound = Math.floor(elapsed / totalRoundDuration) + 1;
+
+    console.log({ startedAt, now, currentRound, elapsed, phase, remainder });
   }
 
   // reset to guessing when computed round advances
@@ -88,6 +92,7 @@ export default function MultiplayerGameplay() {
         current={currentRound}
         total={room.color_sequence.length}
       />
+      {elapsed && <p className="text-white">{Math.floor(elapsed / 1000)} s</p>}
       {phase === "guessing" ? (
         <GuessRound
           backgroundColor={backgroundColor}
