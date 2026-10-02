@@ -17,7 +17,6 @@ import RoundProgress from "../RoundProgress";
 export default function MultiplayerGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
   const [now, setNow] = useState<number>(Date.now);
-  const [timer, setTimer] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
   const [submitted, setSubmitted] = useState<boolean>(false);
@@ -52,14 +51,15 @@ export default function MultiplayerGameplay() {
   let phase: Phase = "guessing";
   let currentRound = 1;
   let elapsed;
+  let remainder;
 
   if (startedAt !== null) {
     elapsed = now - startedAt;
-    const remainder = elapsed % totalRoundDuration;
+    remainder = elapsed % totalRoundDuration;
     phase = remainder < ROUND_DURATION_MS ? "guessing" : "revealed";
     currentRound = Math.floor(elapsed / totalRoundDuration) + 1;
 
-    console.log({ startedAt, now, currentRound, elapsed, phase, remainder });
+    console.log({ currentRound, elapsed, phase, remainder });
   }
 
   // reset to guessing when computed round advances
@@ -92,22 +92,34 @@ export default function MultiplayerGameplay() {
         current={currentRound}
         total={room.color_sequence.length}
       />
-      {elapsed && <p className="text-white">{Math.floor(elapsed / 1000)} s</p>}
+
       {phase === "guessing" ? (
-        <GuessRound
-          backgroundColor={backgroundColor}
-          roomId={room.id}
-          playerId={playerId}
-          currentRound={currentRound}
-          alreadySubmitted={submitted}
-          onSubmitted={(newScore, guess) => {
-            setScore(newScore);
-            setRgbGuess(guess);
-            setSubmitted(true);
-          }}
-        />
+        <div className="flex flex-col items-center gap-4">
+          {remainder && (
+            <p className="text-white">
+              {Math.floor((ROUND_DURATION_MS - remainder) / 1000)} s
+            </p>
+          )}
+          <GuessRound
+            backgroundColor={backgroundColor}
+            roomId={room.id}
+            playerId={playerId}
+            currentRound={currentRound}
+            alreadySubmitted={submitted}
+            onSubmitted={(newScore, guess) => {
+              setScore(newScore);
+              setRgbGuess(guess);
+              setSubmitted(true);
+            }}
+          />
+        </div>
       ) : (
         <div className="flex flex-col gap-4 items-center justify-center">
+          {remainder && (
+            <p className="text-white">
+              {Math.floor((totalRoundDuration - remainder) / 1000)} s
+            </p>
+          )}
           <ColorSwatch color={backgroundColor} />
           <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
             <p>Score: {score}</p>
