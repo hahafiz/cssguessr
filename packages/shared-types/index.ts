@@ -113,6 +113,7 @@ export interface GuessRoundProps {
   roomId: string;
   playerId: string;
   currentRound: number;
+  alreadySubmitted: boolean;
   onSubmitted: (score: number, guess: RGBColor) => void;
 }
 

@@ -14,6 +14,7 @@ export default function GuessRound({
   roomId,
   playerId,
   currentRound,
+  alreadySubmitted,
   onSubmitted,
 }: GuessRoundProps) {
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
@@ -46,8 +47,16 @@ export default function GuessRound({
           channels={RGB_CHANNELS}
           onSliderChange={handleSliderChange}
         />
-        <Button type="submit" onClick={onSubmit} disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Guess"}
+        <Button
+          type="submit"
+          onClick={onSubmit}
+          disabled={isSubmitting || alreadySubmitted}
+        >
+          {alreadySubmitted
+            ? "Submitted"
+            : isSubmitting
+              ? "Submitting..."
+              : "Guess"}
         </Button>
       </div>
     </div>
