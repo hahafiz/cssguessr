@@ -17,9 +17,9 @@ import RoundProgress from "../RoundProgress";
 export default function MultiplayerGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
   const [now, setNow] = useState<number>(Date.now);
-  const [phase, setPhase] = useState<Phase>("guessing");
   const [score, setScore] = useState<number>(0);
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
   const { roomId } = useParams();
   const playerId = roomId ? getStoredPlayerId(roomId) : null;
@@ -40,30 +40,33 @@ export default function MultiplayerGameplay() {
       setNow(Date.now());
     }, 1000);
     return () => clearInterval(interval);
-  });
+  }, []);
 
   const startedAt = room?.started_at
     ? new Date(room.started_at.replace(" ", "T") + "Z").getTime()
     : null;
-  const elapsed = now - startedAt;
-  const totalRoundDuration = ROUND_DURATION_MS + REVEAL_DURATION_MS;
-  const remainder = elapsed % totalRoundDuration;
-  const currentRound = startedAt
-    ? Math.floor((now - startedAt) / (ROUND_DURATION_MS + REVEAL_DURATION_MS)) +
-      1
-    : 1;
 
-  console.log({ startedAt, now, currentRound, diff: now - startedAt });
+  const totalRoundDuration = ROUND_DURATION_MS + REVEAL_DURATION_MS;
+
+  let phase: Phase = "guessing";
+  let currentRound = 1;
+
+  if (startedAt !== null) {
+    const elapsed = now - startedAt;
+    const remainder = elapsed % totalRoundDuration;
+    phase = remainder < ROUND_DURATION_MS ? "guessing" : "revealed";
+    currentRound = Math.floor(elapsed / totalRoundDuration) + 1;
+  }
 
   // reset to guessing when computed round advances
-  const prevRoundRef = useRef(currentRound);
+  const prevPhaseRef = useRef(phase);
   useEffect(() => {
-    if (currentRound !== prevRoundRef.current) {
-      prevRoundRef.current = currentRound;
-      setPhase("guessing");
+    if (phase !== prevPhaseRef.current) {
+      prevPhaseRef.current = phase;
       setRgbGuess([0, 0, 0]);
+      setSubmitted(false);
     }
-  }, [currentRound]);
+  }, [phase]);
 
   if (room === null) {
     return <p>Loading room..</p>;
@@ -91,10 +94,11 @@ export default function MultiplayerGameplay() {
           roomId={room.id}
           playerId={playerId}
           currentRound={currentRound}
+          alreadySubmitted={submitted}
           onSubmitted={(newScore, guess) => {
             setScore(newScore);
-            setPhase("revealed");
             setRgbGuess(guess);
+            setSubmitted(true);
           }}
         />
       ) : (

@@ -15,6 +15,7 @@ export default function SoloGameplay() {
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
   const [score, setScore] = useState<number>(0);
   const [phase, setPhase] = useState<Phase>("guessing");
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
   const { roomId } = useParams();
   const playerId = roomId ? getStoredPlayerId(roomId) : null;
@@ -43,6 +44,7 @@ export default function SoloGameplay() {
     setCurrentRound(currentRound + 1);
     setPhase("guessing");
     setRgbGuess([0, 0, 0]);
+    setSubmitted(false);
   };
 
   const onContinue = () => {
@@ -65,10 +67,12 @@ export default function SoloGameplay() {
           roomId={room.id}
           playerId={playerId}
           currentRound={currentRound}
+          alreadySubmitted={submitted}
           onSubmitted={(newScore, guess) => {
             setScore(newScore);
             setPhase("revealed");
             setRgbGuess(guess);
+            setSubmitted(true);
           }}
         />
       ) : (
