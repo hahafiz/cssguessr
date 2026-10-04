@@ -50,7 +50,7 @@ export default function MultiplayerGameplay() {
 
   let phase: Phase = "guessing";
   let currentRound = 1;
-  let elapsed;
+  let elapsed: number;
   let remainder;
 
   if (startedAt !== null) {
@@ -58,8 +58,6 @@ export default function MultiplayerGameplay() {
     remainder = elapsed % totalRoundDuration;
     phase = remainder < ROUND_DURATION_MS ? "guessing" : "revealed";
     currentRound = Math.floor(elapsed / totalRoundDuration) + 1;
-
-    console.log({ currentRound, elapsed, phase, remainder });
   }
 
   // reset to guessing when computed round advances
@@ -95,7 +93,7 @@ export default function MultiplayerGameplay() {
 
       {phase === "guessing" ? (
         <div className="flex flex-col items-center gap-4">
-          {remainder && (
+          {remainder !== undefined && (
             <p className="text-white">
               {Math.floor((ROUND_DURATION_MS - remainder) / 1000)} s
             </p>
@@ -115,7 +113,7 @@ export default function MultiplayerGameplay() {
         </div>
       ) : (
         <div className="flex flex-col gap-4 items-center justify-center">
-          {remainder && (
+          {remainder !== undefined && (
             <p className="text-white">
               {Math.floor((totalRoundDuration - remainder) / 1000)} s
             </p>
