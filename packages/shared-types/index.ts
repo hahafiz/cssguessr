@@ -114,6 +114,7 @@ export interface GuessRoundProps {
   playerId: string;
   currentRound: number;
   alreadySubmitted: boolean;
+  forceSubmit?: boolean;
   onSubmitted: (score: number, guess: RGBColor) => void;
 }
 

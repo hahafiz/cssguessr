@@ -52,12 +52,16 @@ export default function MultiplayerGameplay() {
   let currentRound = 1;
   let elapsed: number;
   let remainder;
+  let roundCountdown: number | undefined;
+  let forceSubmit: boolean = false;
 
   if (startedAt !== null) {
     elapsed = now - startedAt;
     remainder = elapsed % totalRoundDuration;
     phase = remainder < ROUND_DURATION_MS ? "guessing" : "revealed";
     currentRound = Math.floor(elapsed / totalRoundDuration) + 1;
+    roundCountdown = Math.floor((ROUND_DURATION_MS - 500 - remainder) / 1000);
+    forceSubmit = roundCountdown <= 0;
   }
 
   // reset to guessing when computed round advances
@@ -104,6 +108,7 @@ export default function MultiplayerGameplay() {
             playerId={playerId}
             currentRound={currentRound}
             alreadySubmitted={submitted}
+            forceSubmit={forceSubmit}
             onSubmitted={(newScore, guess) => {
               setScore(newScore);
               setRgbGuess(guess);
