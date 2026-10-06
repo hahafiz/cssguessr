@@ -67,11 +67,11 @@ export default function MultiplayerGameplay() {
   // reset to guessing after revealed
   const prevPhaseRef = useRef(phase);
   useEffect(() => {
-    if (phase === "guessing" && prevPhaseRef.current) {
-      prevPhaseRef.current = phase;
+    if (phase === "guessing" && prevPhaseRef.current !== "guessing") {
       setRgbGuess([0, 0, 0]);
       setSubmitted(false);
     }
+    prevPhaseRef.current = phase;
   }, [phase]);
 
   if (room === null) {
