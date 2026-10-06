@@ -126,3 +126,20 @@ export async function getPlayerList(roomId: string): Promise<PlayerListItem[]> {
 
   return res.json();
 }
+
+export async function getRoundResults(
+  roomId: string,
+  roundNumber: number,
+): Promise<GetResultsResponse> {
+  const res = await fetch(`${API_URL}/room/${roomId}/${roundNumber}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(errorBody?.error ?? "Failed to get round results");
+  }
+
+  return res.json();
+}
