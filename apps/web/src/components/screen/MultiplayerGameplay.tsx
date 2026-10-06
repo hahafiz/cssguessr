@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import { getRoom } from "../../api/rooms";
+import { use, useEffect, useRef, useState } from "react";
+import { getRoom, getRoundResults } from "../../api/rooms";
 import {
   type RGBColor,
   type Phase,
   type Room,
   ROUND_DURATION_MS,
   REVEAL_DURATION_MS,
+  type GetResultsResponse,
 } from "@cssguessr/shared-types";
 import { ColorSwatch } from "../ColorSwatch";
 import GameOver from "./GameOver";
@@ -20,6 +21,9 @@ export default function MultiplayerGameplay() {
   const [score, setScore] = useState<number>(0);
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [roundResults, setRoundResults] = useState<GetResultsResponse | null>(
+    null,
+  );
 
   const { roomId } = useParams();
   const playerId = roomId ? getStoredPlayerId(roomId) : null;
@@ -73,6 +77,19 @@ export default function MultiplayerGameplay() {
     }
     prevPhaseRef.current = phase;
   }, [phase]);
+
+  // fetch result for each rounds
+  useEffect(() => {
+    if (phase === "revealed") {
+      const fetchRoundResults = async () => {
+        if (roomId && currentRound) {
+          const result = await getRoundResults(roomId, currentRound);
+          setRoundResults(result);
+        }
+      };
+      fetchRoundResults();
+    }
+  }, [phase, roomId, currentRound]);
 
   if (room === null) {
     return <p>Loading room..</p>;

@@ -131,7 +131,7 @@ export async function getRoundResults(
   roomId: string,
   roundNumber: number,
 ): Promise<GetResultsResponse> {
-  const res = await fetch(`${API_URL}/room/${roomId}/${roundNumber}`, {
+  const res = await fetch(`${API_URL}/room/${roomId}/results/${roundNumber}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
