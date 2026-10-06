@@ -64,10 +64,10 @@ export default function MultiplayerGameplay() {
     forceSubmit = roundCountdown <= 0;
   }
 
-  // reset to guessing when computed round advances
+  // reset to guessing after revealed
   const prevPhaseRef = useRef(phase);
   useEffect(() => {
-    if (phase !== prevPhaseRef.current) {
+    if (phase === "guessing" && prevPhaseRef.current) {
       prevPhaseRef.current = phase;
       setRgbGuess([0, 0, 0]);
       setSubmitted(false);
