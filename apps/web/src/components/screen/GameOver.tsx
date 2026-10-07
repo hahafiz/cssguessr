@@ -25,22 +25,24 @@ export default function GameOver({ roomId }: GameOverProps) {
 
   return (
     <>
-      {result?.status === "complete" ? (
-        result.scores.map((score) => (
-          <div
-            key={score.player_id}
-            className="flex flex-col gap-2 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-4"
-          >
-            <p>Player: {score.player_id}</p>
-            <p>Your score: {score.total_score} / 1000</p>
-            <Button variant="primary" onClick={() => navigate("/")}>
-              Return to Main Menu
-            </Button>
-          </div>
-        ))
-      ) : (
-        <p className="text-white">Waiting for results..</p>
-      )}
+      <div className="flex flex-col gap-4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        {result?.status === "complete" ? (
+          result.scores.map((score) => (
+            <div
+              key={score.player_id}
+              className="flex flex-col gap-2 rounded-lg bg-white p-4"
+            >
+              <p>Player: {score.player_id}</p>
+              <p>Your score: {score.total_score} / 1000</p>
+            </div>
+          ))
+        ) : (
+          <p className="text-white">Waiting for results..</p>
+        )}
+        <Button variant="primary" onClick={() => navigate("/")}>
+          Return to Main Menu
+        </Button>
+      </div>
     </>
   );
 }
