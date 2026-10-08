@@ -76,7 +76,13 @@ export interface ResultsComplete {
   scores: { player_id: string; total_score: number }[];
 }
 
+export interface RoundResultsComplete {
+  status: "complete";
+  scores: { player_id: string; score: number }[];
+}
+
 export type GetResultsResponse = ResultsWaiting | ResultsComplete;
+export type GetRoundResult = ResultsWaiting | RoundResultsComplete;
 
 export interface ColorChannel {
   label: string;
