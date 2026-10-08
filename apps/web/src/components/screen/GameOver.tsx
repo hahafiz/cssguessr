@@ -10,15 +10,22 @@ import type {
   GameOverProps,
 } from "@cssguessr/shared-types";
 import { useNavigate } from "react-router";
+import { getStoredPlayerId } from "../../api/playerId";
 
 export default function GameOver({ roomId }: GameOverProps) {
   const navigate = useNavigate();
   const [result, setResult] = useState<GetResultsResponse | null>(null);
 
+  const playerId = roomId ? getStoredPlayerId(roomId) : null;
+
   useEffect(() => {
     const fetchResult = async () => {
-      const res = await getResults(roomId);
-      setResult(res);
+      try {
+        const res = await getResults(roomId);
+        setResult(res);
+      } catch (err) {
+        console.error("Failed to fetch results: ", err);
+      }
     };
     fetchResult();
   }, [roomId]);
@@ -32,7 +39,14 @@ export default function GameOver({ roomId }: GameOverProps) {
               key={score.player_id}
               className="flex flex-col gap-2 rounded-lg bg-white p-4"
             >
-              <p>Player: {score.player_id}</p>
+              <p>
+                Player:{" "}
+                {playerId === score.player_id ? (
+                  <strong className="font-bold">"YOU"</strong>
+                ) : (
+                  score.player_id
+                )}
+              </p>
               <p>Your score: {score.total_score} / 1000</p>
             </div>
           ))

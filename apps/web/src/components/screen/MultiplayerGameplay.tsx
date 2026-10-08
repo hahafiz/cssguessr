@@ -1,4 +1,4 @@
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getRoom, getRoundResults } from "../../api/rooms";
 import {
   type RGBColor,
@@ -6,7 +6,7 @@ import {
   type Room,
   ROUND_DURATION_MS,
   REVEAL_DURATION_MS,
-  type GetResultsResponse,
+  type GetRoundResult,
 } from "@cssguessr/shared-types";
 import { ColorSwatch } from "../ColorSwatch";
 import GameOver from "./GameOver";
@@ -21,9 +21,7 @@ export default function MultiplayerGameplay() {
   const [score, setScore] = useState<number>(0);
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [roundResults, setRoundResults] = useState<GetResultsResponse | null>(
-    null,
-  );
+  const [roundResults, setRoundResults] = useState<GetRoundResult | null>(null);
 
   const { roomId } = useParams();
   const playerId = roomId ? getStoredPlayerId(roomId) : null;
@@ -135,18 +133,25 @@ export default function MultiplayerGameplay() {
         </div>
       ) : (
         <div className="flex flex-col gap-4 items-center justify-center">
+          <ColorSwatch color={backgroundColor} />
           {remainder !== undefined && (
             <p className="text-white">
               {Math.floor((totalRoundDuration - remainder) / 1000)} s
             </p>
           )}
-          <ColorSwatch color={backgroundColor} />
-          <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
-            <p>Score: {score}</p>
-            <p>Your guess: rgb({rgbGuess.join(", ")})</p>
-            <p>Answer: {backgroundColor}</p>
-            <p className="text-white">Waiting for next round...</p>
-          </div>
+          {roundResults?.status === "complete" ? (
+            roundResults.scores.map((res) => (
+              <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
+                <p>Score: {res.score}</p>
+                {/* TODO: FIX OTHER PLAYER's GUESS */}
+                <p>Your guess: rgb({rgbGuess.join(", ")})</p>
+                <p>Answer: {backgroundColor}</p>
+                <p className="text-white">Waiting for next round...</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-white">Waiting for results..</p>
+          )}
         </div>
       )}
     </div>
