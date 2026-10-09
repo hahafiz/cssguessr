@@ -1,6 +1,10 @@
-import { RawColor, ColorFormat, RGBColor } from "@cssguessr/shared-types";
-
-export const SEQUENCE_LENGTH = 10;
+import {
+  RawColor,
+  ColorFormat,
+  RGBColor,
+  ROUND_SCORE,
+  SEQUENCE_LENGTH,
+} from "@cssguessr/shared-types";
 
 function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -110,14 +114,15 @@ export function calculateScore(actual: RGBColor, guess: RGBColor): number {
   const [actualR, actualG, actualB] = actual;
   const [guessR, guessG, guessB] = guess;
 
-  const rDiff = Math.abs(actualR - guessR);
-  const gDiff = Math.abs(actualG - guessG);
-  const bDiff = Math.abs(actualB - guessB);
+  const rDiff = actualR - guessR;
+  const gDiff = actualG - guessG;
+  const bDiff = actualB - guessB;
 
-  const normalizedDiff = (rDiff + gDiff + bDiff) / 765;
+  const distance = Math.sqrt(rDiff ** 2 + gDiff ** 2 + bDiff ** 2);
 
-  // closer will get 100 points
-  const score = Math.max(0, Math.round((1 - normalizedDiff) * 100));
+  const maxDistance = Math.sqrt(3 * 255 ** 2);
 
-  return score;
+  const normalizedDiff = distance / maxDistance;
+
+  return Math.round((1 - normalizedDiff) * ROUND_SCORE);
 }

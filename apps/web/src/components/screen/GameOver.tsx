@@ -5,9 +5,11 @@
 import { useEffect, useState } from "react";
 import { getResults } from "../../api/rooms";
 import { Button } from "../ui/button/Button";
-import type {
-  GetResultsResponse,
-  GameOverProps,
+import {
+  type GetResultsResponse,
+  type GameOverProps,
+  ROUND_SCORE,
+  SEQUENCE_LENGTH,
 } from "@cssguessr/shared-types";
 import { useNavigate } from "react-router";
 import { getStoredPlayerId } from "../../api/playerId";
@@ -47,7 +49,10 @@ export default function GameOver({ roomId }: GameOverProps) {
                   score.player_id
                 )}
               </p>
-              <p>Your score: {score.total_score} / 1000</p>
+              <p>
+                Your score: {score.total_score} /{" "}
+                {ROUND_SCORE * SEQUENCE_LENGTH}
+              </p>
             </div>
           ))
         ) : (
