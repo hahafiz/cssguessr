@@ -72,6 +72,7 @@ export default function MultiplayerGameplay() {
     if (phase === "guessing" && prevPhaseRef.current !== "guessing") {
       setRgbGuess([0, 0, 0]);
       setSubmitted(false);
+      setRoundResults(null);
     }
     prevPhaseRef.current = phase;
   }, [phase]);
@@ -80,9 +81,13 @@ export default function MultiplayerGameplay() {
   useEffect(() => {
     if (phase === "revealed") {
       const fetchRoundResults = async () => {
-        if (roomId && currentRound) {
-          const result = await getRoundResults(roomId, currentRound);
-          setRoundResults(result);
+        try {
+          if (roomId && currentRound) {
+            const result = await getRoundResults(roomId, currentRound);
+            setRoundResults(result);
+          }
+        } catch (err) {
+          console.error("Failed to fetch round results: ", err);
         }
       };
       fetchRoundResults();
@@ -139,14 +144,26 @@ export default function MultiplayerGameplay() {
               {Math.floor((totalRoundDuration - remainder) / 1000)} s
             </p>
           )}
+          {/* TODO: CAN SEE OTHER PLAYERS' GUESS
+          REQUIRE SCHEMA AND BE CHANGES */}
+          <p className="text-white">Answer: {backgroundColor}</p>
+          <p className="text-white">Your guess: rgb({rgbGuess.join(", ")})</p>
+          <p className="text-white">Waiting for next round...</p>
           {roundResults?.status === "complete" ? (
             roundResults.scores.map((res) => (
-              <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
+              <div
+                key={res.player_id}
+                className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4"
+              >
+                <p>
+                  Player:{" "}
+                  {playerId === res.player_id ? (
+                    <strong className="font-bold">"YOU"</strong>
+                  ) : (
+                    res.player_id
+                  )}
+                </p>
                 <p>Score: {res.score}</p>
-                {/* TODO: FIX OTHER PLAYER's GUESS */}
-                <p>Your guess: rgb({rgbGuess.join(", ")})</p>
-                <p>Answer: {backgroundColor}</p>
-                <p className="text-white">Waiting for next round...</p>
               </div>
             ))
           ) : (
