@@ -41,14 +41,13 @@ export default function GameOver({ roomId }: GameOverProps) {
               key={score.player_id}
               className="flex flex-col gap-2 rounded-lg bg-white p-4"
             >
-              <p>
-                Player:{" "}
-                {playerId === score.player_id ? (
-                  <strong className="font-bold">"YOU"</strong>
-                ) : (
-                  score.player_id
-                )}
-              </p>
+              {playerId === score.player_id ? (
+                <p>
+                  <strong className="font-bold">"YOUR"</strong> score:
+                </p>
+              ) : (
+                <p>{score.player_id} score:</p>
+              )}
               <p>
                 Your score: {score.total_score} /{" "}
                 {ROUND_SCORE * SEQUENCE_LENGTH}
