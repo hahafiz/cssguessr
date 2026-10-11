@@ -86,6 +86,11 @@ export interface RoundResultsComplete {
   scores: { player_id: string; score: number }[];
 }
 
+export interface ResultListScore {
+  player_id: string;
+  score: number;
+}
+
 export type GetResultsResponse = ResultsWaiting | ResultsComplete;
 export type GetRoundResult = ResultsWaiting | RoundResultsComplete;
 
