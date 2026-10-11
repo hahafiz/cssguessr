@@ -14,6 +14,7 @@ import { useParams } from "react-router";
 import { getStoredPlayerId } from "../../api/playerId";
 import GuessRound from "../GuessRound";
 import RoundProgress from "../RoundProgress";
+import Countdown from "../Countdown";
 
 export default function MultiplayerGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -94,6 +95,8 @@ export default function MultiplayerGameplay() {
     }
   }, [phase, roomId, currentRound]);
 
+  if (remainder === undefined) return;
+
   if (room === null) {
     return <p>Loading room..</p>;
   }
@@ -117,11 +120,7 @@ export default function MultiplayerGameplay() {
 
       {phase === "guessing" ? (
         <div className="flex flex-col items-center gap-4">
-          {remainder !== undefined && (
-            <p className="text-white">
-              {Math.floor((ROUND_DURATION_MS - remainder) / 1000)} s
-            </p>
-          )}
+          <Countdown duration={ROUND_DURATION_MS} remainder={remainder} />
           <GuessRound
             backgroundColor={backgroundColor}
             roomId={room.id}
@@ -138,12 +137,8 @@ export default function MultiplayerGameplay() {
         </div>
       ) : (
         <div className="flex flex-col gap-4 items-center justify-center">
+          <Countdown duration={totalRoundDuration} remainder={remainder} />
           <ColorSwatch color={backgroundColor} />
-          {remainder !== undefined && (
-            <p className="text-white">
-              {Math.floor((totalRoundDuration - remainder) / 1000)} s
-            </p>
-          )}
           {/* TODO: CAN SEE OTHER PLAYERS' GUESS
           REQUIRE SCHEMA AND BE CHANGES */}
           <p className="text-white">Answer: {backgroundColor}</p>

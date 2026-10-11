@@ -135,3 +135,8 @@ export interface RoundProgressProps {
   current: number;
   total: number;
 }
+
+export interface CountdownProps {
+  duration: number;
+  remainder?: number;
+}
