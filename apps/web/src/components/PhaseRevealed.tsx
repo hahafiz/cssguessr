@@ -8,12 +8,15 @@ export default function PhaseRevealed({
   userGuess,
   roundStatus,
   roundScores,
+  remainder = 0,
 }) {
   const totalRoundDuration = ROUND_DURATION_MS + REVEAL_DURATION_MS;
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
-      <Countdown duration={totalRoundDuration} />
+      {remainder && (
+        <Countdown duration={totalRoundDuration} remainder={remainder} />
+      )}
       <ColorSwatch color={backgroundColor} />
       <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
         <p className="text-white">Answer: {backgroundColor}</p>
