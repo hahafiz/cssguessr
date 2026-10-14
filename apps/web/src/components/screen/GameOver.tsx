@@ -34,6 +34,7 @@ export default function GameOver({ roomId }: GameOverProps) {
 
   return (
     <>
+      {/* TODO: SORT PLAYER BY SCORE */}
       <div className="flex flex-col gap-4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         {result?.status === "complete" ? (
           result.scores.map((score) => (
