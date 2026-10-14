@@ -128,6 +128,7 @@ export interface GuessRoundProps {
   currentRound: number;
   alreadySubmitted: boolean;
   forceSubmit?: boolean;
+  remainder?: number;
   onSubmitted: (score: number, guess: RGBColor) => void;
 }
 

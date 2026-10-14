@@ -119,22 +119,20 @@ export default function MultiplayerGameplay() {
       />
 
       {phase === "guessing" ? (
-        <div className="flex flex-col items-center gap-4">
-          <Countdown duration={ROUND_DURATION_MS} remainder={remainder} />
-          <GuessRound
-            backgroundColor={backgroundColor}
-            roomId={room.id}
-            playerId={playerId}
-            currentRound={currentRound}
-            alreadySubmitted={submitted}
-            forceSubmit={forceSubmit}
-            onSubmitted={(newScore, guess) => {
-              setScore(newScore);
-              setRgbGuess(guess);
-              setSubmitted(true);
-            }}
-          />
-        </div>
+        <GuessRound
+          backgroundColor={backgroundColor}
+          roomId={room.id}
+          playerId={playerId}
+          currentRound={currentRound}
+          alreadySubmitted={submitted}
+          forceSubmit={forceSubmit}
+          remainder={remainder}
+          onSubmitted={(newScore, guess) => {
+            setScore(newScore);
+            setRgbGuess(guess);
+            setSubmitted(true);
+          }}
+        />
       ) : (
         <div className="flex flex-col gap-4 items-center justify-center">
           <Countdown duration={totalRoundDuration} remainder={remainder} />

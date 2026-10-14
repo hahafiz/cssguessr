@@ -4,10 +4,12 @@ import { GuessInput } from "./GuessInput";
 import { Button } from "./ui/button/Button";
 import {
   RGB_CHANNELS,
+  ROUND_DURATION_MS,
   type GuessRoundProps,
   type RGBColor,
 } from "@cssguessr/shared-types";
 import { submitScore } from "../api/rooms";
+import Countdown from "./Countdown";
 
 export default function GuessRound({
   backgroundColor,
@@ -16,6 +18,7 @@ export default function GuessRound({
   currentRound,
   alreadySubmitted,
   forceSubmit = false,
+  remainder = 0,
   onSubmitted,
 }: GuessRoundProps) {
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
@@ -49,25 +52,30 @@ export default function GuessRound({
   }, [forceSubmit, alreadySubmitted, onSubmit]);
 
   return (
-    <div className="flex flex-col gap-4 justify-center items-center">
-      <ColorSwatch color={backgroundColor} />
-      <div className="flex flex-col justify-center rounded-lg bg-white">
-        <GuessInput
-          values={rgbGuess}
-          channels={RGB_CHANNELS}
-          onSliderChange={handleSliderChange}
-        />
-        <Button
-          type="submit"
-          onClick={onSubmit}
-          disabled={isSubmitting || alreadySubmitted}
-        >
-          {alreadySubmitted
-            ? "Submitted"
-            : isSubmitting
-              ? "Submitting..."
-              : "Guess"}
-        </Button>
+    <div className="flex flex-col items-center gap-4">
+      {remainder !== 0 && (
+        <Countdown duration={ROUND_DURATION_MS} remainder={remainder} />
+      )}
+      <div className="flex flex-col gap-4 justify-center items-center">
+        <ColorSwatch color={backgroundColor} />
+        <div className="flex flex-col justify-center rounded-lg bg-white">
+          <GuessInput
+            values={rgbGuess}
+            channels={RGB_CHANNELS}
+            onSliderChange={handleSliderChange}
+          />
+          <Button
+            type="submit"
+            onClick={onSubmit}
+            disabled={isSubmitting || alreadySubmitted}
+          >
+            {alreadySubmitted
+              ? "Submitted"
+              : isSubmitting
+                ? "Submitting..."
+                : "Guess"}
+          </Button>
+        </div>
       </div>
     </div>
   );
