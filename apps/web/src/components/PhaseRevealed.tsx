@@ -1,15 +1,18 @@
-import { REVEAL_DURATION_MS, ROUND_DURATION_MS } from "@cssguessr/shared-types";
+import {
+  REVEAL_DURATION_MS,
+  ROUND_DURATION_MS,
+  type PhaseRevealedProps,
+} from "@cssguessr/shared-types";
 import Countdown from "./Countdown";
 import { ColorSwatch } from "./ColorSwatch";
 
 export default function PhaseRevealed({
-  playerId,
   backgroundColor,
+  playerId,
   userGuess,
-  roundStatus,
-  roundScores,
+  roundResult,
   remainder = 0,
-}) {
+}: PhaseRevealedProps) {
   const totalRoundDuration = ROUND_DURATION_MS + REVEAL_DURATION_MS;
 
   return (
@@ -23,8 +26,8 @@ export default function PhaseRevealed({
         <p className="text-white">Your guess: rgb({userGuess})</p>
         <p className="text-white">Waiting for next round...</p>
       </div>
-      {roundStatus === "complete" ? (
-        roundScores.map((res) => (
+      {roundResult.status === "complete" ? (
+        roundResult.scores.map((res) => (
           <div
             key={res.player_id}
             className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4"

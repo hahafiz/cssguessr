@@ -132,6 +132,14 @@ export interface GuessRoundProps {
   onSubmitted: (score: number, guess: RGBColor) => void;
 }
 
+export interface PhaseRevealedProps {
+  backgroundColor: string;
+  playerId: string;
+  userGuess: string;
+  roundResult: GetRoundResult;
+  remainder?: number;
+}
+
 export interface RoundProgressProps {
   current: number;
   total: number;
