@@ -15,6 +15,7 @@ import { getStoredPlayerId } from "../../api/playerId";
 import GuessRound from "../GuessRound";
 import RoundProgress from "../RoundProgress";
 import Countdown from "../Countdown";
+import PhaseRevealed from "../PhaseRevealed";
 
 export default function MultiplayerGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -134,34 +135,13 @@ export default function MultiplayerGameplay() {
           }}
         />
       ) : (
-        <div className="flex flex-col gap-4 items-center justify-center">
-          <Countdown duration={totalRoundDuration} remainder={remainder} />
-          <ColorSwatch color={backgroundColor} />
-          {/* TODO: CAN SEE OTHER PLAYERS' GUESS
-          REQUIRE SCHEMA AND BE CHANGES */}
-          <p className="text-white">Answer: {backgroundColor}</p>
-          <p className="text-white">Your guess: rgb({rgbGuess.join(", ")})</p>
-          <p className="text-white">Waiting for next round...</p>
-          {roundResults?.status === "complete" ? (
-            roundResults.scores.map((res) => (
-              <div
-                key={res.player_id}
-                className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4"
-              >
-                {playerId === res.player_id ? (
-                  <p>
-                    <strong className="font-bold">"YOUR"</strong> score:
-                  </p>
-                ) : (
-                  <p>{res.player_id} score:</p>
-                )}
-                <p>Score: {res.score}</p>
-              </div>
-            ))
-          ) : (
-            <p className="text-white">Waiting for results..</p>
-          )}
-        </div>
+        <PhaseRevealed
+          backgroundColor={backgroundColor}
+          playerId={playerId}
+          userGuess={rgbGuess.join(", ")}
+          roundResult={roundResults}
+          remainder={remainder}
+        />
       )}
     </div>
   );

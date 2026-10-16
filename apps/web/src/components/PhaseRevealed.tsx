@@ -11,30 +11,32 @@ export default function PhaseRevealed({
   playerId,
   userGuess,
   roundResult,
-  remainder = 0,
+  remainder = undefined,
 }: PhaseRevealedProps) {
   const totalRoundDuration = ROUND_DURATION_MS + REVEAL_DURATION_MS;
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
-      {remainder && (
+      {remainder !== undefined && (
         <Countdown duration={totalRoundDuration} remainder={remainder} />
       )}
       <ColorSwatch color={backgroundColor} />
+      {/* TODO: CAN SEE OTHER PLAYERS' GUESS
+          REQUIRE SCHEMA AND BE CHANGES */}
       <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
-        <p className="text-white">Answer: {backgroundColor}</p>
-        <p className="text-white">Your guess: rgb({userGuess})</p>
-        <p className="text-white">Waiting for next round...</p>
+        <p>Answer: {backgroundColor}</p>
+        <p>Your guess: rgb({userGuess})</p>
+        <p>Waiting for next round...</p>
       </div>
-      {roundResult.status === "complete" ? (
-        roundResult.scores.map((res) => (
+      {roundResult?.status === "complete" ? (
+        roundResult?.scores.map((res) => (
           <div
             key={res.player_id}
             className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4"
           >
             {playerId === res.player_id ? (
               <p>
-                <strong className="font-bold">"YOUR"</strong> score:
+                <strong className="font-bold">YOUR</strong> score:
               </p>
             ) : (
               <p>{res.player_id} score:</p>
