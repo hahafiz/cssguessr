@@ -136,7 +136,7 @@ export interface PhaseRevealedProps {
   backgroundColor: string;
   playerId: string;
   userGuess: string;
-  roundResult: GetRoundResult | null;
+  roundResult?: GetRoundResult | null;
   remainder?: number;
 }
 
