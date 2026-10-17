@@ -8,13 +8,11 @@ import {
   REVEAL_DURATION_MS,
   type GetRoundResult,
 } from "@cssguessr/shared-types";
-import { ColorSwatch } from "../ColorSwatch";
 import GameOver from "./GameOver";
 import { useParams } from "react-router";
 import { getStoredPlayerId } from "../../api/playerId";
 import GuessRound from "../GuessRound";
 import RoundProgress from "../RoundProgress";
-import Countdown from "../Countdown";
 import PhaseRevealed from "../PhaseRevealed";
 
 export default function MultiplayerGameplay() {
