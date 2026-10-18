@@ -134,9 +134,7 @@ export interface GuessRoundProps {
 
 export interface PhaseRevealedProps {
   backgroundColor: string;
-  playerId: string;
   userGuess: string;
-  roundResult?: GetRoundResult | null;
   remainder?: number;
 }
 

@@ -133,13 +133,32 @@ export default function MultiplayerGameplay() {
           }}
         />
       ) : (
-        <PhaseRevealed
-          backgroundColor={backgroundColor}
-          playerId={playerId}
-          userGuess={rgbGuess.join(", ")}
-          roundResult={roundResults}
-          remainder={remainder}
-        />
+        <div>
+          <PhaseRevealed
+            backgroundColor={backgroundColor}
+            userGuess={rgbGuess.join(", ")}
+            remainder={remainder}
+          />
+          {roundResults?.status === "complete" ? (
+            roundResults?.scores.map((res) => (
+              <div
+                key={res.player_id}
+                className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4"
+              >
+                {playerId === res.player_id ? (
+                  <p>
+                    <strong className="font-bold">YOUR</strong> score:
+                  </p>
+                ) : (
+                  <p>{res.player_id} score:</p>
+                )}
+                <p>Score: {res.score}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-white">Waiting for results..</p>
+          )}
+        </div>
       )}
     </div>
   );
