@@ -8,6 +8,7 @@ import { useParams } from "react-router";
 import { getStoredPlayerId } from "../../api/playerId";
 import GuessRound from "../GuessRound";
 import RoundProgress from "../RoundProgress";
+import PhaseRevealed from "../PhaseRevealed";
 
 export default function SoloGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -77,6 +78,10 @@ export default function SoloGameplay() {
         />
       ) : (
         <div className="flex flex-col gap-4 items-center justify-center">
+          <PhaseRevealed
+            backgroundColor={backgroundColor}
+            userGuess={rgbGuess.join(", ")}
+          />
           <ColorSwatch color={backgroundColor} />
           <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
             <p>Score: {score}</p>
