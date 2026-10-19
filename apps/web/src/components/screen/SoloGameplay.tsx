@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { getRoom } from "../../api/rooms";
 import { type RGBColor, type Phase, type Room } from "@cssguessr/shared-types";
-import { ColorSwatch } from "../ColorSwatch";
 import { Button } from "../ui/button/Button";
 import GameOver from "./GameOver";
 import { useParams } from "react-router";
@@ -82,11 +81,8 @@ export default function SoloGameplay() {
             backgroundColor={backgroundColor}
             userGuess={rgbGuess.join(", ")}
           />
-          <ColorSwatch color={backgroundColor} />
           <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
             <p>Score: {score}</p>
-            <p>Your guess: rgb({rgbGuess.join(", ")})</p>
-            <p>Answer: {room.color_sequence[currentRound - 1]}</p>
             {currentRound < room.color_sequence.length ? (
               <Button variant="primary" onClick={onNextRound}>
                 Next Round

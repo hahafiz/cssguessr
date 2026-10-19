@@ -24,7 +24,6 @@ export default function PhaseRevealed({
       <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
         <p>Answer: {backgroundColor}</p>
         <p>Your guess: rgb({userGuess})</p>
-        <p>Waiting for next round...</p>
       </div>
     </div>
   );
