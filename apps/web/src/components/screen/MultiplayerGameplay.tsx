@@ -14,6 +14,7 @@ import { getStoredPlayerId } from "../../api/playerId";
 import GuessRound from "../GuessRound";
 import RoundProgress from "../RoundProgress";
 import PhaseRevealed from "../PhaseRevealed";
+import ResultsList from "../ResultsList";
 
 export default function MultiplayerGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -141,19 +142,7 @@ export default function MultiplayerGameplay() {
           />
           {roundResults?.status === "complete" ? (
             roundResults?.scores.map((res) => (
-              <div
-                key={res.player_id}
-                className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4"
-              >
-                {playerId === res.player_id ? (
-                  <p>
-                    <strong className="font-bold">YOUR</strong> score:
-                  </p>
-                ) : (
-                  <p>{res.player_id} score:</p>
-                )}
-                <p>Score: {res.score}</p>
-              </div>
+              <ResultsList scores={res} playerId={playerId} />
             ))
           ) : (
             <p className="text-white">Waiting for results..</p>

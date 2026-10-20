@@ -86,9 +86,9 @@ export interface RoundResultsComplete {
   scores: { player_id: string; score: number }[];
 }
 
-export interface ResultListScore {
-  player_id: string;
-  score: number;
+export interface ResultsListProps {
+  scores: { player_id: string; score: number };
+  playerId: string;
 }
 
 export type GetResultsResponse = ResultsWaiting | ResultsComplete;
