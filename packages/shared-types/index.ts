@@ -87,7 +87,7 @@ export interface RoundResultsComplete {
 }
 
 export interface ResultsListProps {
-  scores: { player_id: string; score: number };
+  roundResults: GetRoundResult | null;
   playerId: string;
 }
 
