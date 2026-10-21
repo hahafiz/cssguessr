@@ -14,7 +14,7 @@ export default function ResultsList({
           >
             {playerId === res.player_id ? (
               <p>
-                <strong className="font-bold">"YOUR"</strong> score:
+                <strong className="font-bold">YOUR</strong> score:
               </p>
             ) : (
               <p>{res.player_id} score:</p>

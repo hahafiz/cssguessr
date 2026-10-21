@@ -44,7 +44,7 @@ export default function GameOver({ roomId }: GameOverProps) {
             >
               {playerId === score.player_id ? (
                 <p>
-                  <strong className="font-bold">"YOUR"</strong> score:
+                  <strong className="font-bold">YOUR</strong> score:
                 </p>
               ) : (
                 <p>{score.player_id} score:</p>
