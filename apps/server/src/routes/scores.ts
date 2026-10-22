@@ -40,11 +40,6 @@ router.post(
       return;
     }
 
-    if (round_number > 1 && !isRoundComplete(room_id, round_number - 1)) {
-      res.status(400).json({ error: "Previous round is not yet complete" });
-      return;
-    }
-
     const roomRow = getRoomId.get(room_id) as RoomsRow | undefined;
     if (!roomRow) {
       res.status(404).json({ error: "Room not found" });
