@@ -8,6 +8,7 @@ import { getStoredPlayerId } from "../../api/playerId";
 import GuessRound from "../GuessRound";
 import RoundProgress from "../RoundProgress";
 import PhaseRevealed from "../PhaseRevealed";
+import RoomError from "../RoomError";
 
 export default function SoloGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -16,19 +17,34 @@ export default function SoloGameplay() {
   const [score, setScore] = useState<number>(0);
   const [phase, setPhase] = useState<Phase>("guessing");
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const { roomId } = useParams();
   const playerId = roomId ? getStoredPlayerId(roomId) : null;
 
   useEffect(() => {
+    if (!roomId) return;
+    let cancelled = false;
+
     const fetchRoom = async () => {
-      if (roomId) {
+      try {
         const newRoom = await getRoom(roomId);
-        setRoom(newRoom);
+        if (!cancelled) setRoom(newRoom);
+      } catch (err) {
+        console.error("Failed to load room: ", err);
+        if (!cancelled) setLoadError("Room not found");
       }
     };
+
     fetchRoom();
+    return () => {
+      cancelled = true;
+    };
   }, [roomId]);
+
+  if (loadError) {
+    return <RoomError message={loadError} />;
+  }
 
   if (room === null) {
     return <p>Loading room..</p>;

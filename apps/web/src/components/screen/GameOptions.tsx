@@ -12,6 +12,7 @@ export default function GameOptions() {
   const [colorFormat, setColorFormat] = useState<"rgb" | "hsl">("rgb");
   const [inputMethod, setInputMethod] = useState<"slider" | "hex">("slider");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   if (mode !== "solo" && mode !== "duel") {
@@ -24,6 +25,12 @@ export default function GameOptions() {
   }
 
   const onCreateGame = async () => {
+    if (mode === "duel" && (maxPlayers < 2 || maxPlayers > 10)) {
+      setError("Duel needs 2 to 10 players");
+      return;
+    }
+
+    setError(null);
     setIsSubmitting(true);
     try {
       const newRoom = await createRoom({
@@ -36,6 +43,9 @@ export default function GameOptions() {
       } else {
         navigate(`/solo/${newRoom.id}`);
       }
+    } catch (err) {
+      console.error("Failed to create game: ", err);
+      setError("Could not create the game. Please try again");
     } finally {
       setIsSubmitting(false);
     }
@@ -94,11 +104,22 @@ export default function GameOptions() {
             <input
               id="max-player"
               type="number"
+              min={2}
+              max={10}
               value={maxPlayers}
               className="text-white"
-              onChange={(e) => setMaxPlayers(Number(e.target.value))}
+              onChange={(e) => {
+                setMaxPlayers(Number(e.target.value));
+                setError(null);
+              }}
             ></input>
           </>
+        )}
+
+        {error && (
+          <p role="alert" className="text-red-400">
+            {error}
+          </p>
         )}
 
         <Button
