@@ -58,6 +58,14 @@ router.post(
       return;
     }
 
+    const channels = [guessed_r, guessed_g, guessed_b];
+    if (!channels.every((c) => Number.isInteger(c) && c >= 0 && c <= 255)) {
+      res
+        .status(400)
+        .json({ error: "guessed_r/g/b must be intergers from 0 to 255" });
+      return;
+    }
+
     const actualRgb = hslToRgb(actualHsl);
     const guessRgb: RGBColor = [guessed_r, guessed_g, guessed_b];
     const score = calculateScore(actualRgb, guessRgb);
