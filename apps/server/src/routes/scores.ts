@@ -18,6 +18,7 @@ import {
   getPlayerScore,
   getPlayerFinalScore,
   getExistingScore,
+  getPlayerRow,
 } from "../utils/queries.ts";
 import { calculateScore, hslToRgb } from "../utils/colors.ts";
 
@@ -38,6 +39,7 @@ router.post(
     }
 
     if (
+      typeof player_id !== "string" ||
       !player_id ||
       typeof round_number !== "number" ||
       typeof guessed_r !== "number" ||
@@ -46,7 +48,7 @@ router.post(
     ) {
       res.status(400).json({
         error:
-          "Missing or invalid field. player_id (string), round_number (number), score (number)",
+          "Missing or invalid field. player_id (string), round_number (number), guessed_r/g/b (number)",
       });
       return;
     }
@@ -54,6 +56,19 @@ router.post(
     const roomRow = getRoomId.get(room_id) as RoomsRow | undefined;
     if (!roomRow) {
       res.status(404).json({ error: "Room not found" });
+      return;
+    }
+
+    // the player must belong to this room
+    if (!getPlayerRow.get(room_id, player_id)) {
+      res.status(403).json({ error: "Player is not in this room" });
+      return;
+    }
+
+    // multiplayer room only accept scores after the host starts them
+    // solo rooms (max_players === 1) never get a started_at, so they exempt
+    if (roomRow.max_players > 1 && !roomRow.started_at) {
+      res.status(400).json({ error: "Game has not started yet" });
       return;
     }
 

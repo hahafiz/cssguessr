@@ -10,6 +10,10 @@ export const getExistingScore = db.prepare(
   "SELECT score FROM scores WHERE room_id = ? AND player_id = ? AND round_number = ?",
 );
 
+export const getPlayerRow = db.prepare(
+  "SELECT player_id FROM players WHERE room_id = ? AND player_id = ?",
+);
+
 export const getPlayerScore = db.prepare(
   "SELECT p.player_id, COALESCE(s.score, 0) AS score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id AND s.round_number = ? WHERE p.room_id = ?",
 );
