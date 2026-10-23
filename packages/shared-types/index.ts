@@ -9,7 +9,7 @@ export interface RoomsRow {
   color_sequence: string; // an array of numeric tuples
   max_players: number;
   status: "waiting" | "active" | "expired";
-  started_at: string;
+  started_at: string | null;
   created_at: string;
 }
 

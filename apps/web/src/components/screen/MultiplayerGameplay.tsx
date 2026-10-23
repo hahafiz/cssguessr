@@ -9,12 +9,13 @@ import {
   type GetRoundResult,
 } from "@cssguessr/shared-types";
 import GameOver from "./GameOver";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { getStoredPlayerId } from "../../api/playerId";
 import GuessRound from "../GuessRound";
 import RoundProgress from "../RoundProgress";
 import PhaseRevealed from "../PhaseRevealed";
 import ResultsList from "../ResultsList";
+import { Button } from "../ui/button/Button";
 
 export default function MultiplayerGameplay() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -26,6 +27,7 @@ export default function MultiplayerGameplay() {
 
   const { roomId } = useParams();
   const playerId = roomId ? getStoredPlayerId(roomId) : null;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -54,7 +56,7 @@ export default function MultiplayerGameplay() {
   let phase: Phase = "guessing";
   let currentRound = 1;
   let elapsed: number;
-  let remainder;
+  let remainder: number | undefined;
   let roundCountdown: number | undefined;
   let forceSubmit: boolean = false;
 
@@ -95,14 +97,26 @@ export default function MultiplayerGameplay() {
     }
   }, [phase, roomId, currentRound]);
 
-  if (remainder === undefined) return;
-
   if (room === null) {
     return <p>Loading room..</p>;
   }
 
   if (!playerId) {
     return <p>Could not find player identity for this room</p>;
+  }
+
+  if (!room.started_at) {
+    return (
+      <div className="flex flex-col gap-4 items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <p className="text-white">This game hasn't started yet</p>
+        <Button
+          variant="primary"
+          onClick={() => navigate("/duel/lobby/${room.id}")}
+        >
+          Go to lobby
+        </Button>
+      </div>
+    );
   }
 
   if (currentRound > room.color_sequence.length) {
