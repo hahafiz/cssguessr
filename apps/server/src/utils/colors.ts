@@ -124,5 +124,5 @@ export function calculateScore(actual: RGBColor, guess: RGBColor): number {
 
   const normalizedDiff = distance / maxDistance;
 
-  return Math.round((1 - normalizedDiff) * ROUND_SCORE);
+  return Math.max(0, Math.round((1 - normalizedDiff) * ROUND_SCORE));
 }
