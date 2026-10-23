@@ -1,8 +1,40 @@
 // TO CHECK IF THE ROUND OR GAME IS COMPLETED BY ALL PLAYERS
 
 import db from "./../database.ts";
-import { SEQUENCE_LENGTH } from "./colors.ts";
+import {
+  SEQUENCE_LENGTH,
+  ROUND_DURATION_MS,
+  REVEAL_DURATION_MS,
+} from "@cssguessr/shared-types";
 import { scoreCountQuery, playerCountQuery } from "./queries.ts";
+
+const ROUND_CYCLE_MS = ROUND_DURATION_MS + REVEAL_DURATION_MS;
+
+function toMs(startedAt: string | null): number | null {
+  return startedAt
+    ? new Date(startedAt.replace(" ", "T") + "Z").getTime()
+    : null;
+}
+
+// guessing window of this round has closed
+export function hasRoundEnded(
+  startedAt: string | null,
+  round: number,
+  now = Date.now(),
+): boolean {
+  const start = toMs(startedAt);
+  if (start === null) return false;
+  return now >= start + (round - 1) * ROUND_CYCLE_MS + ROUND_DURATION_MS;
+}
+
+export function hasGameEnded(
+  startedAt: string | null,
+  now = Date.now(),
+): boolean {
+  const start = toMs(startedAt);
+  if (start === null) return false;
+  return now >= start + SEQUENCE_LENGTH + ROUND_CYCLE_MS;
+}
 
 // how many distinct player in this room have submitted a score
 export function getSubmittedPlayerCount(

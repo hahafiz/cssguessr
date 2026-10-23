@@ -1,6 +1,11 @@
 import { Router, Request, Response } from "express";
 import db from "../database";
-import { isGameComplete, isRoundComplete } from "../utils/completion.ts";
+import {
+  hasGameEnded,
+  hasRoundEnded,
+  isGameComplete,
+  isRoundComplete,
+} from "../utils/completion.ts";
 import { RawColor, RGBColor, RoomsRow } from "@cssguessr/shared-types";
 import {
   getRoomId,
@@ -96,7 +101,7 @@ router.get(
 
     let allPlayerScore;
     try {
-      if (!isGameComplete(room_id)) {
+      if (!isGameComplete(room_id) && !hasGameEnded(isRoomExist.started_at)) {
         res.status(200).json({ status: "waiting" });
         return;
       }
@@ -135,12 +140,15 @@ router.get(
 
     let allPlayerScore;
     try {
-      if (!isRoundComplete(room_id, round_number)) {
+      if (
+        !isRoundComplete(room_id, round_number) &&
+        !hasRoundEnded(isRoomExist.started_at, round_number)
+      ) {
         res.status(200).json({ status: "waiting" });
         return;
       }
 
-      allPlayerScore = getPlayerScore.all(room_id, round_number);
+      allPlayerScore = getPlayerScore.all(round_number, room_id);
     } catch (err) {
       res.status(500).json({ error: "Internal server error" });
       return;

@@ -6,7 +6,7 @@ export const insertQuery = db.prepare(
   `INSERT INTO scores (room_id, player_id, round_number, score) VALUES (?, ?, ?, ?)`,
 );
 export const getPlayerScore = db.prepare(
-  "SELECT player_id, score FROM scores WHERE room_id = ? AND round_number = ?",
+  "SELECT p.player_id, COALESCE(s.score, 0) AS score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id AND s.round_number = ? WHERE p.room_id = ?",
 );
 
 export const getPlayerIsHost = db.prepare(
@@ -14,7 +14,7 @@ export const getPlayerIsHost = db.prepare(
 );
 
 export const getPlayerFinalScore = db.prepare(
-  "SELECT player_id, SUM(score) AS total_score FROM scores WHERE room_id = ? GROUP BY player_id",
+  "SELECT p.player_id, COALESCE(SUM(s.score), 0) AS total_score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id WHERE p.room_id = ? GROUP BY p.player_id",
 );
 
 export const getPlayerWithRoom = db.prepare(
