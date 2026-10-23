@@ -19,6 +19,7 @@ import {
   getPlayerFinalScore,
   getExistingScore,
   getPlayerRow,
+  expireRoom,
 } from "../utils/queries.ts";
 import { calculateScore, hslToRgb } from "../utils/colors.ts";
 
@@ -157,6 +158,7 @@ router.get(
         return;
       }
 
+      expireRoom.run(room_id);
       allPlayerScore = getPlayerFinalScore.all(room_id);
     } catch (err) {
       res.status(500).json({ error: "Internal server error" });

@@ -86,6 +86,11 @@ router.post("/:id", async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
+    if (roomStatus === "expired") {
+      res.status(400).json({ error: "Game already finished" });
+      return;
+    }
+
     if (roomStatus !== "waiting") {
       res.status(400).json({ error: "Game already started" });
       return;

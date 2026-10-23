@@ -53,3 +53,7 @@ export const scoreCountQuery = db.prepare(
 export const playerCountQuery = db.prepare(
   "SELECT COUNT(*) as count FROM players WHERE room_id = ?",
 );
+
+export const expireRoom = db.prepare(
+  "UPDATE rooms SET status = 'expired' WHERE id = ? AND status != 'expired'",
+);
