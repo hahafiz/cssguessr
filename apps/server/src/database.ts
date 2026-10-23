@@ -34,6 +34,9 @@ db.exec(`
     UNIQUE(player_id, room_id),
     FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
   );
+
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_scores_unique
+    ON scores(room_id, player_id, round_number);
 `);
 
 export function parseRoomRow(room: RoomsRow): Room {

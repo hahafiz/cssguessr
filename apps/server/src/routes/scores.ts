@@ -12,6 +12,7 @@ import {
   insertQuery,
   getPlayerScore,
   getPlayerFinalScore,
+  getExistingScore,
 } from "../utils/queries.ts";
 import { calculateScore, hslToRgb } from "../utils/colors.ts";
 
@@ -72,6 +73,17 @@ router.post(
 
     try {
       const result = insertQuery.run(room_id, player_id, round_number, score);
+
+      if (Number(result.changes) === 0) {
+        const existing = getExistingScore.get(
+          room_id,
+          player_id,
+          round_number,
+        ) as { score: number } | undefined;
+
+        res.status(200).json({ ...result, score: existing?.score ?? score });
+        return;
+      }
       res.status(201).json({ ...result, score });
     } catch (err) {
       const isForeignKeyError =
