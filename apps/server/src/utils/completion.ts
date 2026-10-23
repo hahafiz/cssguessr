@@ -66,9 +66,7 @@ export function isRoundComplete(
   return totalPlayers > 0 && submitted === totalPlayers;
 }
 
-// has every player submitted scores for every round?
-// since the round is sequential, check the last round (SEQUENCE_LENGTH)
-// last round complete = game complete
+// everyone submitted the last round ?
 export function isGameComplete(room_id: string): boolean {
   return isRoundComplete(room_id, SEQUENCE_LENGTH);
 }

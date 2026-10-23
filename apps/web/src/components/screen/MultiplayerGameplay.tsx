@@ -102,7 +102,9 @@ export default function MultiplayerGameplay() {
   }
 
   if (!playerId) {
-    return <p>Could not find player identity for this room</p>;
+    return (
+      <p className="text-white">Could not find player identity for this room</p>
+    );
   }
 
   if (!room.started_at) {

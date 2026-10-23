@@ -35,7 +35,9 @@ export default function SoloGameplay() {
   }
 
   if (!playerId) {
-    return <p>Could not find player identity for this room</p>;
+    return (
+      <p className="text-white">Could not find player identity for this room</p>
+    );
   }
 
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
