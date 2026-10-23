@@ -33,7 +33,7 @@ export function hasGameEnded(
 ): boolean {
   const start = toMs(startedAt);
   if (start === null) return false;
-  return now >= start + SEQUENCE_LENGTH + ROUND_CYCLE_MS;
+  return now >= start + SEQUENCE_LENGTH * ROUND_CYCLE_MS;
 }
 
 // how many distinct player in this room have submitted a score

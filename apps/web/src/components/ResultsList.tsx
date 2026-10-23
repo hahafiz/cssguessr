@@ -19,7 +19,7 @@ export default function ResultsList({
             ) : (
               <p>{res.player_id} score:</p>
             )}
-            <p>Score: {res.score}</p>
+            <p>{res.score}</p>
           </div>
         ))
       ) : (

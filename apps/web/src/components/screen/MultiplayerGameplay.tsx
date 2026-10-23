@@ -111,7 +111,7 @@ export default function MultiplayerGameplay() {
         <p className="text-white">This game hasn't started yet</p>
         <Button
           variant="primary"
-          onClick={() => navigate("/duel/lobby/${room.id}")}
+          onClick={() => navigate(`/duel/lobby/${room.id}`)}
         >
           Go to lobby
         </Button>
