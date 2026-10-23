@@ -82,19 +82,29 @@ export default function MultiplayerGameplay() {
 
   // fetch result for each rounds
   useEffect(() => {
-    if (phase === "revealed") {
-      const fetchRoundResults = async () => {
-        try {
-          if (roomId && currentRound) {
-            const result = await getRoundResults(roomId, currentRound);
-            setRoundResults(result);
-          }
-        } catch (err) {
-          console.error("Failed to fetch round results: ", err);
+    if (phase !== "revealed" || !roomId) return;
+
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const fetchRoundResults = async () => {
+      try {
+        const result = await getRoundResults(roomId, currentRound);
+        if (cancelled) return;
+        setRoundResults(result);
+        if (result.status === "waiting") {
+          timer = setTimeout(fetchRoundResults, 1000);
         }
-      };
-      fetchRoundResults();
-    }
+      } catch (err) {
+        console.error("Failed to fetch round results: ", err);
+        if (!cancelled) timer = setTimeout(fetchRoundResults, 2000);
+      }
+    };
+    fetchRoundResults();
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, [phase, roomId, currentRound]);
 
   if (room === null) {

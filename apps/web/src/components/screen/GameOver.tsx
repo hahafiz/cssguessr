@@ -19,15 +19,27 @@ export default function GameOver({ roomId }: GameOverProps) {
   const playerId = roomId ? getStoredPlayerId(roomId) : null;
 
   useEffect(() => {
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout>;
+
     const fetchResult = async () => {
       try {
         const res = await getResults(roomId);
+        if (cancelled) return;
         setResult(res);
+        if (res.status === "waiting") {
+          timer = setTimeout(fetchResult, 1000);
+        }
       } catch (err) {
         console.error("Failed to fetch results: ", err);
+        if (!cancelled) timer = setTimeout(fetchResult, 2000);
       }
     };
     fetchResult();
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, [roomId]);
 
   return (
