@@ -2,6 +2,7 @@ export const SEQUENCE_LENGTH = 10;
 export const ROUND_SCORE = 1000;
 export const ROUND_DURATION_MS = 11000; // 11000
 export const REVEAL_DURATION_MS = 6000; // 6000
+export const SUBMIT_GRACE_MS = 3000;
 
 // tables types
 export interface RoomsRow {

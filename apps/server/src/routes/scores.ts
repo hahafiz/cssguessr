@@ -6,7 +6,12 @@ import {
   isGameComplete,
   isRoundComplete,
 } from "../utils/completion.ts";
-import { RawColor, RGBColor, RoomsRow } from "@cssguessr/shared-types";
+import {
+  RawColor,
+  RGBColor,
+  RoomsRow,
+  SUBMIT_GRACE_MS,
+} from "@cssguessr/shared-types";
 import {
   getRoomId,
   insertQuery,
@@ -56,6 +61,17 @@ router.post(
     const actualHsl = colorSequence[round_number - 1];
     if (!actualHsl) {
       res.status(400).json({ error: "Invalid round number" });
+      return;
+    }
+
+    if (
+      hasRoundEnded(
+        roomRow.started_at,
+        round_number,
+        Date.now() - SUBMIT_GRACE_MS,
+      )
+    ) {
+      res.status(400).json({ error: "This round is closed" });
       return;
     }
 
