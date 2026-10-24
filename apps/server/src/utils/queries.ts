@@ -23,7 +23,7 @@ export const getPlayerIsHost = db.prepare(
 );
 
 export const getPlayerFinalScore = db.prepare(
-  "SELECT p.player_id, COALESCE(SUM(s.score), 0) AS total_score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id WHERE p.room_id = ? GROUP BY p.player_id",
+  "SELECT p.player_id, COALESCE(SUM(s.score), 0) AS total_score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id WHERE p.room_id = ? GROUP BY p.player_id ORDER BY total_score DESC, p.joined_at ASC",
 );
 
 export const getPlayerWithRoom = db.prepare(
