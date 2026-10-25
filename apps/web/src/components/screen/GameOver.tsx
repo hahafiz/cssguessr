@@ -11,6 +11,7 @@ import {
 } from "@cssguessr/shared-types";
 import { useNavigate } from "react-router";
 import { getStoredPlayerId } from "../../api/playerId";
+import { resultRank } from "../../utils/result-rank";
 
 export default function GameOver({ roomId }: GameOverProps) {
   const navigate = useNavigate();
@@ -46,24 +47,32 @@ export default function GameOver({ roomId }: GameOverProps) {
     <>
       <div className="flex flex-col gap-4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         {result?.status === "complete" ? (
-          result.scores.map((score, index) => (
-            <div
-              key={score.player_id}
-              className="flex gap-4 rounded-lg bg-white p-4"
-            >
-              <p>#{index + 1}</p>
-              <div className="flex flex-col gap-2">
-                {playerId === score.player_id ? (
-                  <p>
-                    <strong className="font-bold">YOUR</strong> score:
-                  </p>
-                ) : (
-                  <p>{score.player_id} score:</p>
-                )}
-                <p>{score.total_score}</p>
+          resultRank(result.scores, (s) => s.total_score).map((score) => {
+            const isFirstPlace = score.rank === 1;
+
+            return (
+              <div
+                key={score.player_id}
+                className={`flex gap-4 rounded-lg p-4 ${
+                  isFirstPlace
+                    ? "bg-amber-100 border-2 border-amber-500 shadow-md"
+                    : "bg-white"
+                }`}
+              >
+                <p>#{score.rank}</p>
+                <div className="flex flex-col gap-2">
+                  {playerId === score.player_id ? (
+                    <p>
+                      <strong className="font-bold">YOUR</strong> score:
+                    </p>
+                  ) : (
+                    <p>{score.player_id} score:</p>
+                  )}
+                  <p>{score.total_score}</p>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <p className="text-white">Waiting for results..</p>
         )}

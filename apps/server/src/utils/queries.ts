@@ -15,7 +15,7 @@ export const getPlayerRow = db.prepare(
 );
 
 export const getPlayerScore = db.prepare(
-  "SELECT p.player_id, COALESCE(s.score, 0) AS score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id AND s.round_number = ? WHERE p.room_id = ?",
+  "SELECT p.player_id, COALESCE(s.score, 0) AS score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id AND s.round_number = ? WHERE p.room_id = ? ORDER BY COALESCE(s.score, 0) DESC, p.joined_at ASC",
 );
 
 export const getPlayerIsHost = db.prepare(
