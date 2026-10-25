@@ -46,19 +46,22 @@ export default function GameOver({ roomId }: GameOverProps) {
     <>
       <div className="flex flex-col gap-4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         {result?.status === "complete" ? (
-          result.scores.map((score) => (
+          result.scores.map((score, index) => (
             <div
               key={score.player_id}
-              className="flex flex-col gap-2 rounded-lg bg-white p-4"
+              className="flex gap-4 rounded-lg bg-white p-4"
             >
-              {playerId === score.player_id ? (
-                <p>
-                  <strong className="font-bold">YOUR</strong> score:
-                </p>
-              ) : (
-                <p>{score.player_id} score:</p>
-              )}
-              <p>{score.total_score}</p>
+              <p>#{index + 1}</p>
+              <div className="flex flex-col gap-2">
+                {playerId === score.player_id ? (
+                  <p>
+                    <strong className="font-bold">YOUR</strong> score:
+                  </p>
+                ) : (
+                  <p>{score.player_id} score:</p>
+                )}
+                <p>{score.total_score}</p>
+              </div>
             </div>
           ))
         ) : (
