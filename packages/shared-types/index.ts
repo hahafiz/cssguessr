@@ -40,9 +40,13 @@ export interface Room extends Omit<RoomsRow, "color_sequence"> {
   color_sequence: string[];
 }
 
+export const NAME_MAX_LENGTH = 20;
+
 export interface RoomWithPlayer extends Room {
   player_id: string;
+  public_id: string;
   is_host: number;
+  name: string;
 }
 
 // user input
@@ -79,12 +83,12 @@ export interface ResultsWaiting {
 
 export interface ResultsComplete {
   status: "complete";
-  scores: { player_id: string; total_score: number }[];
+  scores: { public_id: string; name: string; total_score: number }[];
 }
 
 export interface RoundResultsComplete {
   status: "complete";
-  scores: { player_id: string; score: number }[];
+  scores: { public_id: string; name: string; score: number }[];
 }
 
 export interface ResultsListProps {
@@ -118,7 +122,8 @@ export const RGB_CHANNELS: ColorChannel[] = [
 ];
 
 export interface PlayerListItem {
-  player_id: string;
+  public_id: string;
+  name: string;
   is_host: number;
 }
 

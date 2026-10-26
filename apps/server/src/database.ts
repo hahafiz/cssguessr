@@ -28,7 +28,9 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS players (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     player_id TEXT NOT NULL,
+    public_id TEXT NOT NULL UNIQUE,
     room_id TEXT NOT NULL,
+    name TEXT NOT NULL DEFAULT 'Player',
     is_host INTEGER NOT NULL CHECK (is_host IN (0, 1)),
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(player_id, room_id),

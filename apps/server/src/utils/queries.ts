@@ -15,15 +15,15 @@ export const getPlayerRow = db.prepare(
 );
 
 export const getPlayerScore = db.prepare(
-  "SELECT p.player_id, COALESCE(s.score, 0) AS score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id AND s.round_number = ? WHERE p.room_id = ? ORDER BY COALESCE(s.score, 0) DESC, p.joined_at ASC",
+  "SELECT p.public_id, p.name, COALESCE(s.score, 0) AS score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id AND s.round_number = ? WHERE p.room_id = ? ORDER BY COALESCE(s.score, 0) DESC, p.id ASC",
 );
 
 export const getPlayerIsHost = db.prepare(
-  "SELECT player_id, is_host FROM players WHERE room_id = ?",
+  "SELECT public_id, name, is_host FROM players WHERE room_id = ? ORDER BY id",
 );
 
 export const getPlayerFinalScore = db.prepare(
-  "SELECT p.player_id, COALESCE(SUM(s.score), 0) AS total_score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id WHERE p.room_id = ? GROUP BY p.player_id ORDER BY total_score DESC, p.joined_at ASC",
+  "SELECT p.public_id, p.name, COALESCE(SUM(s.score), 0) AS total_score FROM players p LEFT JOIN scores s ON s.room_id = p.room_id AND s.player_id = p.player_id WHERE p.room_id = ? GROUP BY p.player_id, p.public_id, p.name ORDER BY total_score DESC, p.id ASC",
 );
 
 export const getPlayerWithRoom = db.prepare(
@@ -33,7 +33,11 @@ export const insertRoom = db.prepare(
   "INSERT INTO rooms (id, color_sequence, max_players) values (?, ?, ?)",
 );
 export const insertPlayer = db.prepare(
-  "INSERT INTO players (player_id, room_id, is_host) values (?, ?, ?)",
+  "INSERT INTO players (player_id, public_id, room_id, is_host, name) values (?, ?, ?, ?, ?)",
+);
+
+export const renamePlayer = db.prepare(
+  "UPDATE players SET name = ? WHERE room_id = ? AND player_id = ?",
 );
 
 export const roomCapacity = db.prepare(

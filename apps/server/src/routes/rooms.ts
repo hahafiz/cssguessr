@@ -6,6 +6,7 @@ import {
   RoomsRow,
   CreateRoomInput,
   PlayerWithRoom,
+  NAME_MAX_LENGTH,
 } from "@cssguessr/shared-types";
 import crypto from "crypto";
 import { generateRawColorSequence } from "../utils/colors.ts";
@@ -14,6 +15,7 @@ import {
   getPlayerWithRoom,
   insertRoom,
   insertPlayer,
+  renamePlayer,
   roomCapacity,
   changeRoomStatus,
   getPlayerIsHost,
@@ -41,6 +43,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   const colorJsonStr = JSON.stringify(colorSequence); // convert to json so BE can read
   const roomID = crypto.randomUUID();
   const playerID = crypto.randomUUID();
+  const publicID = crypto.randomUUID();
 
   let newRoomRow: RoomsRow | undefined;
 
@@ -48,7 +51,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     db.exec("BEGIN"); // starts transaction
     insertRoom.run(roomID, colorJsonStr, max_players); // insert newly created roomID to database
     newRoomRow = getRoomId.get(roomID) as RoomsRow | undefined; // fetched the newly created room as raw data
-    insertPlayer.run(playerID, roomID, IS_HOST);
+    insertPlayer.run(playerID, publicID, roomID, IS_HOST, "Player 1");
     db.exec("COMMIT");
   } catch (err) {
     db.exec("ROLLBACK");
@@ -62,13 +65,20 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   }
 
   const room: Room = parseRoomRow(newRoomRow); // parse the raw data so FE can read
-  res.json({ ...room, player_id: playerID, is_host: IS_HOST });
+  res.json({
+    ...room,
+    player_id: playerID,
+    public_id: publicID,
+    is_host: IS_HOST,
+    name: "Player 1",
+  });
 });
 
 // POST /room/:id - join room
 router.post("/:id", async (req: Request, res: Response): Promise<void> => {
   const { id: room_id } = req.params;
   const playerID = crypto.randomUUID();
+  const publicID = crypto.randomUUID();
 
   if (typeof room_id !== "string") {
     res.status(400).json({ error: "ID is not a string" });
@@ -84,6 +94,8 @@ router.post("/:id", async (req: Request, res: Response): Promise<void> => {
     res.status(404).json({ error: "Room ID is not found" });
     return;
   }
+
+  let defaultName = "";
 
   try {
     if (roomStatus === "expired") {
@@ -101,14 +113,21 @@ router.post("/:id", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    insertPlayer.run(playerID, room_id, IS_NOT_HOST);
+    defaultName = `Player ${isCapacity.count + 1}`;
+    insertPlayer.run(playerID, publicID, room_id, IS_NOT_HOST, defaultName);
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
     return;
   }
 
   const room: Room = parseRoomRow(isRoomExist);
-  res.json({ ...room, player_id: playerID, is_host: IS_NOT_HOST });
+  res.json({
+    ...room,
+    player_id: playerID,
+    public_id: publicID,
+    is_host: IS_NOT_HOST,
+    name: defaultName,
+  });
 });
 
 // POST /room/:id - start room
@@ -223,6 +242,57 @@ router.get(
     }
 
     res.json(players);
+  },
+);
+
+// PATCH /room/:id/name - rename a player (lobby only)
+router.patch(
+  "/:id/name",
+  async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const { player_id, name } = req.body;
+
+    if (typeof id !== "string") {
+      res.status(400).json({ error: "ID is not a string" });
+      return;
+    }
+    if (typeof player_id !== "string" || typeof name !== "string") {
+      res.status(400).json({ error: "player_id and name must be strings" });
+      return;
+    }
+
+    const trimmed = name.trim();
+    if (trimmed.length < 1 || trimmed.length > NAME_MAX_LENGTH) {
+      res
+        .status(400)
+        .json({ error: `Name must be 1 to ${NAME_MAX_LENGTH} characters` });
+      return;
+    }
+
+    try {
+      const roomRow = getRoomId.get(id) as RoomsRow | undefined;
+      if (!roomRow) {
+        res.status(404).json({ error: "Room not found" });
+        return;
+      }
+      if (roomRow.status !== "waiting") {
+        res
+          .status(400)
+          .json({ error: "Names are locked once the game starts" });
+        return;
+      }
+
+      const result = renamePlayer.run(trimmed, id, player_id);
+      if (Number(result.changes) === 0) {
+        res.status(404).json({ error: "Player not found in this room" });
+        return;
+      }
+
+      res.json({ player_id, name: trimmed });
+    } catch (err) {
+      console.error("Error renaming player: ", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
   },
 );
 
