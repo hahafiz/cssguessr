@@ -99,6 +99,11 @@ export interface ResultsListProps {
 export type GetResultsResponse = ResultsWaiting | ResultsComplete;
 export type GetRoundResult = ResultsWaiting | RoundResultsComplete;
 
+export interface RenamePlayer {
+  playerId: string;
+  name: string;
+}
+
 export interface ColorChannel {
   label: string;
   min: number;

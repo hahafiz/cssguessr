@@ -3,6 +3,7 @@ import type {
   GetResultsResponse,
   GetRoundResult,
   PlayerListItem,
+  RenamePlayer,
   RGBColor,
   Room,
   RoomWithPlayer,
@@ -140,6 +141,28 @@ export async function getRoundResults(
   if (!res.ok) {
     const errorBody = await res.json().catch(() => null);
     throw new Error(errorBody?.error ?? "Failed to get round results");
+  }
+
+  return res.json();
+}
+
+export async function renamePlayer(
+  roomId: string,
+  playerId: string,
+  name: string,
+): Promise<RenamePlayer> {
+  const res = await fetch(`${API_URL}/room/${roomId}/name`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      player_id: playerId,
+      name: name,
+    }),
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(errorBody?.error ?? "Failed to rename player");
   }
 
   return res.json();
