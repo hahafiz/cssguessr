@@ -3,7 +3,11 @@ import { Button } from "../ui/button/Button";
 import { getStoredPlayerId, storePlayerId } from "../../api/playerId";
 import { useEffect, useState } from "react";
 import { getPlayerList, getRoom, joinRoom, startRoom } from "../../api/rooms";
-import type { PlayerListItem, Room } from "@cssguessr/shared-types";
+import {
+  NAME_MAX_LENGTH,
+  type PlayerListItem,
+  type Room,
+} from "@cssguessr/shared-types";
 
 export default function GameLobby() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -17,7 +21,7 @@ export default function GameLobby() {
   const [playerList, setPlayerList] = useState<PlayerListItem[]>([]);
   const navigate = useNavigate();
 
-  const currentPlayer = playerList.find((p) => p.player_id === playerId);
+  const currentPlayer = playerList.find((p) => p.public_id === playerId);
   const isHost = currentPlayer?.is_host === 1;
 
   // join room
@@ -79,8 +83,8 @@ export default function GameLobby() {
         <div className="flex flex-col gap-4 text-white">
           <h3>Players</h3>
           {playerList.map((p) => (
-            <div key={p.player_id} className="flex gap-2">
-              <p>{p.player_id}</p>
+            <div key={p.public_id} className="flex gap-2">
+              <p>{p.public_id}</p>
               {p.is_host ? <strong>HOST</strong> : <p>Player</p>}
             </div>
           ))}
@@ -92,6 +96,7 @@ export default function GameLobby() {
         ) : (
           <p className="text-white">Waiting for host to start</p>
         )}
+        <input type="text" maxLength={NAME_MAX_LENGTH} />
       </div>
     </>
   );

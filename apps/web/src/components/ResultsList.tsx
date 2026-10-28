@@ -13,7 +13,7 @@ export default function ResultsList({
 
           return (
             <div
-              key={score.player_id}
+              key={score.public_id}
               className={`flex gap-4 rounded-lg p-4 ${
                 isFirstPlace
                   ? "bg-amber-50 border-2 border-amber-400"
@@ -22,12 +22,12 @@ export default function ResultsList({
             >
               <p>#{score.rank}</p>
               <div className="flex flex-col gap-2">
-                {playerId === score.player_id ? (
+                {playerId === score.public_id ? (
                   <p>
                     <strong className="font-bold">YOUR</strong> score:
                   </p>
                 ) : (
-                  <p>{score.player_id} score:</p>
+                  <p>{score.public_id} score:</p>
                 )}
                 <p>{score.score}</p>
               </div>
