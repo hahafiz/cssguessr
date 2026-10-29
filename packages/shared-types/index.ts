@@ -158,3 +158,8 @@ export interface CountdownProps {
   duration: number;
   remainder?: number;
 }
+
+export interface StoredPlayer {
+  playerId: string; // secret, only sent in requests
+  publicId: string; // safe to show and compare
+}
