@@ -1,6 +1,10 @@
 import { useNavigate, useParams } from "react-router";
 import { Button } from "../ui/button/Button";
-import { getStoredPlayerId, storePlayerId } from "../../api/playerId";
+import {
+  getStoredPlayerId,
+  getStoredPublicId,
+  storePlayer,
+} from "../../api/playerId";
 import { useEffect, useState } from "react";
 import { getPlayerList, getRoom, joinRoom, startRoom } from "../../api/rooms";
 import {
@@ -17,11 +21,14 @@ export default function GameLobby() {
   const [playerId, setPlayerId] = useState<string | null>(() =>
     roomId ? getStoredPlayerId(roomId) : null,
   );
+  const [publicId, setPublicId] = useState<string | null>(() =>
+    roomId ? getStoredPublicId(roomId) : null,
+  );
   // other playersId
   const [playerList, setPlayerList] = useState<PlayerListItem[]>([]);
   const navigate = useNavigate();
 
-  const currentPlayer = playerList.find((p) => p.public_id === playerId);
+  const currentPlayer = playerList.find((p) => p.public_id === publicId);
   const isHost = currentPlayer?.is_host === 1;
 
   // join room
@@ -31,8 +38,12 @@ export default function GameLobby() {
         if (!playerId) {
           const newRoom = await joinRoom(roomId);
           setRoom(newRoom);
-          storePlayerId(roomId, newRoom.player_id);
+          storePlayer(roomId, {
+            playerId: newRoom.player_id,
+            publicId: newRoom.public_id,
+          });
           setPlayerId(newRoom.player_id);
+          setPublicId(newRoom.public_id);
         } else {
           const newRoom = await getRoom(roomId);
           setRoom(newRoom);
@@ -84,7 +95,8 @@ export default function GameLobby() {
           <h3>Players</h3>
           {playerList.map((p) => (
             <div key={p.public_id} className="flex gap-2">
-              <p>{p.public_id}</p>
+              <p>{p.name}</p>
+              {p.public_id === publicId && <span>YOU</span>}
               {p.is_host ? <strong>HOST</strong> : <p>Player</p>}
             </div>
           ))}

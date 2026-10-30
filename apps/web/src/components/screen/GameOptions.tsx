@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { createRoom } from "../../api/rooms";
 import { Button } from "../ui/button/Button";
-import { storePlayerId } from "../../api/playerId";
+import { storePlayer } from "../../api/playerId";
 
 export default function GameOptions() {
   const [searchParams] = useSearchParams();
@@ -36,7 +36,10 @@ export default function GameOptions() {
       const newRoom = await createRoom({
         max_players: mode === "duel" ? maxPlayers : 1,
       });
-      storePlayerId(newRoom.id, newRoom.player_id);
+      storePlayer(newRoom.id, {
+        playerId: newRoom.player_id,
+        publicId: newRoom.public_id,
+      });
 
       if (mode === "duel") {
         navigate(`/duel/lobby/${newRoom.id}`);
