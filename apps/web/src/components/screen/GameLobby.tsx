@@ -16,6 +16,7 @@ import {
 export default function GameLobby() {
   const [room, setRoom] = useState<Room | null>(null);
   const [roomStatus, setRoomStatus] = useState("waiting");
+  const [joinError, setJoinError] = useState<string | null>(null);
   const { roomId } = useParams();
   // local playerId
   const [playerId, setPlayerId] = useState<string | null>(() =>
@@ -50,7 +51,10 @@ export default function GameLobby() {
         }
       }
     };
-    fetchRoom();
+    fetchRoom().catch((err) => {
+      console.error("Failed to load lobby: ", err);
+      setJoinError(err instanceof Error ? err.message : "Could not join room");
+    });
   }, [roomId, playerId]);
 
   // polling - all players will call this function to BE
@@ -84,13 +88,17 @@ export default function GameLobby() {
     }
   };
 
+  if (joinError) {
+    return <p className="text-white">{joinError}</p>;
+  }
+
   return (
     <>
       <div className="flex flex-col gap-4 w-28 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="text-white">
           Invite your friends: {window.location.href}
         </div>
-        <div className="text-white">Room status: {room?.max_players}</div>
+        <div className="text-white">Max players: {room?.max_players}</div>
         <div className="flex flex-col gap-4 text-white">
           <h3>Players</h3>
           {playerList.map((p) => (

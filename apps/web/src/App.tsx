@@ -9,8 +9,8 @@ const router = createBrowserRouter([
   { path: "/", element: <MainMenu /> },
   { path: "/setup", element: <GameOptions /> },
   { path: "/solo/:roomId", element: <SoloGameplay /> },
-  { path: "/duel/lobby/:roomId", element: <GameLobby /> }, // placeholder for lobby
-  { path: "/room/:roomId", element: <MultiplayerGameplay /> }, // gameplay mode
+  { path: "/duel/lobby/:roomId", element: <GameLobby /> },
+  { path: "/room/:roomId", element: <MultiplayerGameplay /> },
 ]);
 
 function App() {

@@ -3,7 +3,7 @@ import { resultRank } from "../utils/result-rank";
 
 export default function ResultsList({
   roundResults,
-  playerId,
+  myPublicId,
 }: ResultsListProps) {
   return (
     <div className="flex flex-col gap-2">
@@ -22,7 +22,7 @@ export default function ResultsList({
             >
               <p>#{score.rank}</p>
               <div className="flex flex-col gap-2">
-                {playerId === score.public_id ? (
+                {myPublicId === score.public_id ? (
                   <p>
                     <strong className="font-bold">YOUR</strong> score:
                   </p>

@@ -93,7 +93,7 @@ export interface RoundResultsComplete {
 
 export interface ResultsListProps {
   roundResults: GetRoundResult | null;
-  playerId: string;
+  myPublicId: string;
 }
 
 export type GetResultsResponse = ResultsWaiting | ResultsComplete;
