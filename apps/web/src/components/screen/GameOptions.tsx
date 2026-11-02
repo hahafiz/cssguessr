@@ -110,7 +110,7 @@ export default function GameOptions() {
               min={2}
               max={10}
               value={maxPlayers}
-              className="text-white"
+              className="text-black bg-white rounded-sm py-1 px-2"
               onChange={(e) => {
                 setMaxPlayers(Number(e.target.value));
                 setError(null);

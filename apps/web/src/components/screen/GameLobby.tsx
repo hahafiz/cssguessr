@@ -104,6 +104,12 @@ export default function GameLobby() {
     setIsRenameOverlayOpen(true);
     setPlayerName(currentPlayer?.name ?? "");
   };
+
+  const closeOverlay = () => {
+    setIsRenameOverlayOpen(false);
+    setError("");
+  };
+
   const onSaveName = async () => {
     const trimmed = playerName.trim();
     if (!trimmed) {
@@ -164,25 +170,40 @@ export default function GameLobby() {
         )}
 
         {isRenameOverlayOpen && (
-          <div>
-            {error && (
-              <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-lg">
-                {error}
-              </p>
-            )}
-            <input
-              type="text"
-              maxLength={NAME_MAX_LENGTH}
-              value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
-            />
-            <Button
-              variant="primary"
-              onClick={onSaveName}
-              disabled={savingName}
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+            onClick={closeOverlay}
+          >
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Rename player"
+              onClick={(e) => e.stopPropagation()}
+              className="flex w-full max-w-md flex-col gap-3 rounded-lg bg-white p-6 shadow-xl"
             >
-              {savingName ? "Saving..." : "Save"}
-            </Button>
+              {error && (
+                <p className="rounded-lg bg-red-50 p-3 text-sm text-red-500">
+                  {error}
+                </p>
+              )}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  maxLength={NAME_MAX_LENGTH}
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
+                  className="min-w-0 flex-1 rounded-sm bg-white py-1 px-2 text-black"
+                  autoFocus
+                />
+                <Button
+                  variant="primary"
+                  onClick={onSaveName}
+                  disabled={savingName}
+                >
+                  {savingName ? "Saving..." : "Save"}
+                </Button>
+              </div>
+            </div>
           </div>
         )}
       </div>
