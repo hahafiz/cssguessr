@@ -70,17 +70,17 @@ export default function GameLobby() {
 
   // polling - all players will call this function to BE
   useEffect(() => {
-    const interval = setInterval(() => {
-      const fetchGame = async () => {
-        if (roomId) {
-          const playersList = await getPlayerList(roomId);
-          setPlayerList(playersList);
-          const room = await getRoom(roomId);
-          setRoomStatus(room.status);
-        }
-      };
+    const fetchGame = async () => {
+      if (!roomId) return;
+      const playersList = await getPlayerList(roomId);
+      setPlayerList(playersList);
+      const room = await getRoom(roomId);
+      setRoomStatus(room.status);
+    };
+    const poll = () =>
       fetchGame().catch((err) => console.error("Lobby poll failed: ", err));
-    }, 3000);
+    poll();
+    const interval = setInterval(poll, 3000);
 
     return () => clearInterval(interval);
   }, [roomId]);
