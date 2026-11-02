@@ -6,7 +6,13 @@ import {
   storePlayer,
 } from "../../api/playerId";
 import { useEffect, useState } from "react";
-import { getPlayerList, getRoom, joinRoom, startRoom } from "../../api/rooms";
+import {
+  getPlayerList,
+  getRoom,
+  joinRoom,
+  renamePlayer,
+  startRoom,
+} from "../../api/rooms";
 import {
   NAME_MAX_LENGTH,
   type PlayerListItem,
@@ -17,6 +23,11 @@ export default function GameLobby() {
   const [room, setRoom] = useState<Room | null>(null);
   const [roomStatus, setRoomStatus] = useState("waiting");
   const [joinError, setJoinError] = useState<string | null>(null);
+  const [playerName, setPlayerName] = useState<string>("");
+  const [isRenameOverlayOpen, setIsRenameOverlayOpen] =
+    useState<boolean>(false);
+  const [savingName, setSavingName] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const { roomId } = useParams();
   // local playerId
   const [playerId, setPlayerId] = useState<string | null>(() =>
@@ -68,7 +79,7 @@ export default function GameLobby() {
           setRoomStatus(room.status);
         }
       };
-      fetchGame();
+      fetchGame().catch((err) => console.error("Lobby poll failed: ", err));
     }, 3000);
 
     return () => clearInterval(interval);
@@ -85,6 +96,36 @@ export default function GameLobby() {
   const onStart = async () => {
     if (roomId && playerId) {
       await startRoom(roomId, playerId);
+    }
+  };
+
+  const openOverlay = () => {
+    setError("");
+    setIsRenameOverlayOpen(true);
+    setPlayerName(currentPlayer?.name ?? "");
+  };
+  const onSaveName = async () => {
+    const trimmed = playerName.trim();
+    if (!trimmed) {
+      setError("Name can't be empty");
+      return;
+    }
+
+    setError("");
+    setSavingName(true);
+
+    try {
+      if (roomId && playerId) {
+        await renamePlayer(roomId, playerId, trimmed);
+        setIsRenameOverlayOpen(false);
+
+        // show the new name now instead of waiting for the next poll
+        getPlayerList(roomId).then(setPlayerList).catch(console.error);
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Could not rename");
+    } finally {
+      setSavingName(false);
     }
   };
 
@@ -105,7 +146,12 @@ export default function GameLobby() {
             <div key={p.public_id} className="flex gap-2">
               <p>{p.name}</p>
               {p.public_id === publicId && <span>YOU</span>}
-              {p.is_host ? <strong>HOST</strong> : <p>Player</p>}
+              {p.is_host === 1 && <strong>HOST</strong>}
+              {p.public_id === publicId && (
+                <Button variant="outline" onClick={openOverlay}>
+                  Rename
+                </Button>
+              )}
             </div>
           ))}
         </div>
@@ -116,7 +162,29 @@ export default function GameLobby() {
         ) : (
           <p className="text-white">Waiting for host to start</p>
         )}
-        <input type="text" maxLength={NAME_MAX_LENGTH} />
+
+        {isRenameOverlayOpen && (
+          <div>
+            {error && (
+              <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-lg">
+                {error}
+              </p>
+            )}
+            <input
+              type="text"
+              maxLength={NAME_MAX_LENGTH}
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+            />
+            <Button
+              variant="primary"
+              onClick={onSaveName}
+              disabled={savingName}
+            >
+              {savingName ? "Saving..." : "Save"}
+            </Button>
+          </div>
+        )}
       </div>
     </>
   );

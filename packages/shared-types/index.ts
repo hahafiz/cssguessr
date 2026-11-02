@@ -93,14 +93,14 @@ export interface RoundResultsComplete {
 
 export interface ResultsListProps {
   roundResults: GetRoundResult | null;
-  myPublicId: string;
+  myPublicId: string | null;
 }
 
 export type GetResultsResponse = ResultsWaiting | ResultsComplete;
 export type GetRoundResult = ResultsWaiting | RoundResultsComplete;
 
 export interface RenamePlayer {
-  playerId: string;
+  player_id: string;
   name: string;
 }
 
