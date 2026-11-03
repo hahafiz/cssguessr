@@ -141,7 +141,7 @@ export default function GameLobby() {
 
   return (
     <>
-      <div className="flex flex-col gap-4 w-28 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex flex-col w-full h-full gap-4 p-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 justify-center">
         <div className="text-white">
           Invite your friends: {window.location.href}
         </div>
@@ -192,7 +192,7 @@ export default function GameLobby() {
                   maxLength={NAME_MAX_LENGTH}
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  className="min-w-0 flex-1 rounded-sm bg-white py-1 px-2 text-black"
+                  className="min-w-0 flex-1 rounded-md bg-slate-200 py-1 px-2 text-black"
                   autoFocus
                 />
                 <Button
