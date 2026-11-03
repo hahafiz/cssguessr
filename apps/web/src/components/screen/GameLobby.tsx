@@ -5,7 +5,7 @@ import {
   getStoredPublicId,
   storePlayer,
 } from "../../api/playerId";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getPlayerList,
   getRoom,
@@ -39,6 +39,7 @@ export default function GameLobby() {
   // other playersId
   const [playerList, setPlayerList] = useState<PlayerListItem[]>([]);
   const navigate = useNavigate();
+  const joinStarted = useRef(false);
 
   const currentPlayer = playerList.find((p) => p.public_id === publicId);
   const isHost = currentPlayer?.is_host === 1;
@@ -48,6 +49,9 @@ export default function GameLobby() {
     const fetchRoom = async () => {
       if (roomId) {
         if (!playerId) {
+          if (joinStarted.current) return;
+          joinStarted.current = true;
+
           const newRoom = await joinRoom(roomId);
           setRoom(newRoom);
           storePlayer(roomId, {
@@ -64,6 +68,7 @@ export default function GameLobby() {
     };
     fetchRoom().catch((err) => {
       console.error("Failed to load lobby: ", err);
+      joinStarted.current = false;
       setJoinError(err instanceof Error ? err.message : "Could not join room");
     });
   }, [roomId, playerId]);
