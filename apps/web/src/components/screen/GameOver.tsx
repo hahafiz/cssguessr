@@ -66,7 +66,7 @@ export default function GameOver({ roomId }: GameOverProps) {
                       <strong className="font-bold">YOUR</strong> score:
                     </p>
                   ) : (
-                    <p>{score.public_id} score:</p>
+                    <p>{score.name} score:</p>
                   )}
                   <p>{score.total_score}</p>
                 </div>
