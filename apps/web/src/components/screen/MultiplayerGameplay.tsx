@@ -10,7 +10,7 @@ import {
 } from "@cssguessr/shared-types";
 import GameOver from "./GameOver";
 import { useNavigate, useParams } from "react-router";
-import { getStoredPlayerId } from "../../api/playerId";
+import { getStoredPublicId } from "../../api/playerId";
 import GuessRound from "../GuessRound";
 import RoundProgress from "../RoundProgress";
 import PhaseRevealed from "../PhaseRevealed";
@@ -28,7 +28,7 @@ export default function MultiplayerGameplay() {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const { roomId } = useParams();
-  const playerId = roomId ? getStoredPlayerId(roomId) : null;
+  const myPublicId = roomId ? getStoredPublicId(roomId) : null;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function MultiplayerGameplay() {
     return <p>Loading room..</p>;
   }
 
-  if (!playerId) {
+  if (!myPublicId) {
     return (
       <p className="text-white">Could not find player identity for this room</p>
     );
@@ -148,7 +148,7 @@ export default function MultiplayerGameplay() {
   }
 
   if (currentRound > room.color_sequence.length) {
-    return <GameOver roomId={room.id} playerId={playerId} />;
+    return <GameOver roomId={room.id} playerId={myPublicId} />;
   }
 
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
@@ -165,7 +165,7 @@ export default function MultiplayerGameplay() {
         <GuessRound
           backgroundColor={backgroundColor}
           roomId={room.id}
-          playerId={playerId}
+          playerId={myPublicId}
           currentRound={currentRound}
           alreadySubmitted={submitted}
           forceSubmit={forceSubmit}
@@ -183,7 +183,7 @@ export default function MultiplayerGameplay() {
             userGuess={rgbGuess.join(", ")}
             remainder={remainder}
           />
-          <ResultsList roundResults={roundResults} playerId={playerId} />
+          <ResultsList roundResults={roundResults} myPublicId={myPublicId} />
         </div>
       )}
     </div>

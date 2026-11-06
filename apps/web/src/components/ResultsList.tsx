@@ -22,13 +22,12 @@ export default function ResultsList({
             >
               <p>#{score.rank}</p>
               <div className="flex flex-col gap-2">
-                {myPublicId === score.public_id ? (
-                  <p>
-                    <strong className="font-bold">YOUR</strong> score:
-                  </p>
-                ) : (
-                  <p>{score.public_id} score:</p>
-                )}
+                <p>
+                  {score.name}
+                  {myPublicId === score.public_id && (
+                    <strong className="font-bold pl-1">YOU</strong>
+                  )}
+                </p>
                 <p>{score.score}</p>
               </div>
             </div>
