@@ -10,14 +10,14 @@ import {
   type GameOverProps,
 } from "@cssguessr/shared-types";
 import { useNavigate } from "react-router";
-import { getStoredPlayerId } from "../../api/playerId";
+import { getStoredPublicId } from "../../api/playerId";
 import { resultRank } from "../../utils/result-rank";
 
 export default function GameOver({ roomId }: GameOverProps) {
   const navigate = useNavigate();
   const [result, setResult] = useState<GetResultsResponse | null>(null);
 
-  const playerId = roomId ? getStoredPlayerId(roomId) : null;
+  const myPublicId = roomId ? getStoredPublicId(roomId) : null;
 
   useEffect(() => {
     let cancelled = false;
@@ -61,13 +61,12 @@ export default function GameOver({ roomId }: GameOverProps) {
               >
                 <p>#{score.rank}</p>
                 <div className="flex flex-col gap-2">
-                  {playerId === score.public_id ? (
-                    <p>
-                      <strong className="font-bold">YOUR</strong> score:
-                    </p>
-                  ) : (
-                    <p>{score.name} score:</p>
-                  )}
+                  <p>
+                    {score.name}
+                    {myPublicId === score.public_id && (
+                      <strong className="font-bold pl-1">YOU</strong>
+                    )}
+                  </p>
                   <p>{score.total_score}</p>
                 </div>
               </div>
