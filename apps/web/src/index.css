@@ -4,7 +4,7 @@
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 10px;
+  height: 32px;
   border-radius: 9999px;
   cursor: pointer;
   background: linear-gradient(to right, #000, var(--fill));

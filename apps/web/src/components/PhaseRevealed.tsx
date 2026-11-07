@@ -21,7 +21,7 @@ export default function PhaseRevealed({
       <ColorSwatch color={backgroundColor} />
       {/* TODO: CAN SEE OTHER PLAYERS' GUESS
           REQUIRE SCHEMA AND BE CHANGES */}
-      <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
+      <div className="flex flex-col gap-2 justify-center rounded-lg text-gray-200 p-4">
         <p>Answer: {backgroundColor}</p>
         <p>Your guess: rgb({userGuess})</p>
       </div>

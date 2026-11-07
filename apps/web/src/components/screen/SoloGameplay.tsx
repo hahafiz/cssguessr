@@ -94,12 +94,12 @@ export default function SoloGameplay() {
           }}
         />
       ) : (
-        <div className="flex flex-col gap-4 items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
           <PhaseRevealed
             backgroundColor={backgroundColor}
             userGuess={rgbGuess.join(", ")}
           />
-          <div className="flex flex-col gap-2 justify-center rounded-lg bg-white p-4">
+          <div className="flex flex-col w-full gap-2 justify-center rounded-lg text-gray-200 p-4">
             <p>Score: {score}</p>
             {currentRound < room.color_sequence.length ? (
               <Button variant="primary" onClick={onNextRound}>

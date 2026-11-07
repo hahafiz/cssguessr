@@ -58,7 +58,7 @@ export default function GuessRound({
       )}
       <div className="flex flex-col gap-4 justify-center items-center">
         <ColorSwatch color={backgroundColor} />
-        <div className="flex flex-col justify-center rounded-lg bg-white">
+        <div className="flex flex-col justify-center rounded-lg">
           <GuessInput
             values={rgbGuess}
             channels={RGB_CHANNELS}
