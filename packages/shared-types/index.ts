@@ -108,6 +108,7 @@ export interface ColorChannel {
   label: string;
   min: number;
   max: number;
+  color?: string;
 }
 
 export interface ColorSwatchProps {
@@ -121,9 +122,9 @@ export interface SliderProps {
 }
 
 export const RGB_CHANNELS: ColorChannel[] = [
-  { label: "Red", min: 0, max: 255 },
-  { label: "Green", min: 0, max: 255 },
-  { label: "Blue", min: 0, max: 255 },
+  { label: "R", min: 0, max: 255, color: "#ef4444" },
+  { label: "G", min: 0, max: 255, color: "#22c55e" },
+  { label: "B", min: 0, max: 255, color: "#3b82f6" },
 ];
 
 export interface PlayerListItem {
