@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ColorSwatch } from "./ColorSwatch";
 import { GuessInput } from "./GuessInput";
 import { Button } from "./ui/button/Button";
@@ -23,6 +23,7 @@ export default function GuessRound({
 }: GuessRoundProps) {
   const [rgbGuess, setRgbGuess] = useState<RGBColor>([0, 0, 0]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const autoSubmitted = useRef(false);
 
   const handleSliderChange = (index: number, newValue: number) => {
     setRgbGuess((prev) => {
@@ -45,7 +46,8 @@ export default function GuessRound({
   }, [roomId, playerId, currentRound, onSubmitted, rgbGuess]);
 
   useEffect(() => {
-    if (forceSubmit && !alreadySubmitted) {
+    if (forceSubmit && !alreadySubmitted && !autoSubmitted.current) {
+      autoSubmitted.current = true;
       // lint: setState-in-effect warning — verified no duplicate submit via network tab
       onSubmit();
     }

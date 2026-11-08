@@ -74,7 +74,6 @@ export type Phase = "guessing" | "revealed" | "complete";
 
 export interface GameOverProps {
   roomId: string;
-  playerId: string;
 }
 
 export interface ResultsWaiting {
@@ -137,6 +136,7 @@ export interface GuessRoundProps {
   backgroundColor: string;
   roomId: string;
   playerId: string;
+  publicId: string;
   currentRound: number;
   alreadySubmitted: boolean;
   forceSubmit?: boolean;

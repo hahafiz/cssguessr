@@ -10,7 +10,7 @@ import {
 } from "@cssguessr/shared-types";
 import GameOver from "./GameOver";
 import { useNavigate, useParams } from "react-router";
-import { getStoredPublicId } from "../../api/playerId";
+import { getStoredPlayerId, getStoredPublicId } from "../../api/playerId";
 import GuessRound from "../GuessRound";
 import RoundProgress from "../RoundProgress";
 import PhaseRevealed from "../PhaseRevealed";
@@ -28,6 +28,7 @@ export default function MultiplayerGameplay() {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const { roomId } = useParams();
+  const playerId = roomId ? getStoredPlayerId(roomId) : null;
   const myPublicId = roomId ? getStoredPublicId(roomId) : null;
   const navigate = useNavigate();
 
@@ -127,7 +128,7 @@ export default function MultiplayerGameplay() {
     return <p>Loading room..</p>;
   }
 
-  if (!myPublicId) {
+  if (!myPublicId || !playerId) {
     return (
       <p className="text-white">Could not find player identity for this room</p>
     );
@@ -148,7 +149,7 @@ export default function MultiplayerGameplay() {
   }
 
   if (currentRound > room.color_sequence.length) {
-    return <GameOver roomId={room.id} playerId={myPublicId} />;
+    return <GameOver roomId={room.id} />;
   }
 
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
@@ -165,7 +166,7 @@ export default function MultiplayerGameplay() {
         <GuessRound
           backgroundColor={backgroundColor}
           roomId={room.id}
-          playerId={myPublicId}
+          playerId={playerId}
           currentRound={currentRound}
           alreadySubmitted={submitted}
           forceSubmit={forceSubmit}

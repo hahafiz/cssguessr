@@ -1,5 +1,4 @@
 import { Router, Request, Response } from "express";
-import db from "../database";
 import {
   hasGameEnded,
   hasRoundEnded,
