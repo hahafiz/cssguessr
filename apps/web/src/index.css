@@ -13,8 +13,8 @@
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #fff;
   border: 3px solid var(--fill);
@@ -23,8 +23,8 @@
 
 .slider::-moz-range-thumb {
   box-sizing: border-box;
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #fff;
   border: 3px solid var(--fill);
