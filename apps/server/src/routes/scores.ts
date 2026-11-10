@@ -9,6 +9,7 @@ import {
   RawColor,
   RGBColor,
   RoomsRow,
+  SEQUENCE_LENGTH,
   SUBMIT_GRACE_MS,
 } from "@cssguessr/shared-types";
 import {
@@ -179,8 +180,14 @@ router.get(
     }
 
     const round_number: number = Number(raw_round_number);
-    if (Number.isNaN(round_number)) {
-      res.status(400).json({ error: "Round number must be a valid number" });
+    if (
+      !Number.isInteger(round_number) ||
+      round_number < 1 ||
+      round_number > SEQUENCE_LENGTH
+    ) {
+      res
+        .status(400)
+        .json({ error: `Round number must be 1 to ${SEQUENCE_LENGTH}` });
       return;
     }
 
@@ -200,7 +207,7 @@ router.get(
         return;
       }
 
-      allPlayerScore = getPlayerScore.all(round_number, room_id);
+      allPlayerScore = getPlayerScore.all(round_number, round_number, room_id);
     } catch (err) {
       res.status(500).json({ error: "Internal server error" });
       return;

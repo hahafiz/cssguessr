@@ -87,7 +87,12 @@ export interface ResultsComplete {
 
 export interface RoundResultsComplete {
   status: "complete";
-  scores: { public_id: string; name: string; score: number }[];
+  scores: {
+    public_id: string;
+    name: string;
+    score: number; // points in this round
+    total_score: number; // running total through this round
+  }[];
 }
 
 export interface ResultsListProps {

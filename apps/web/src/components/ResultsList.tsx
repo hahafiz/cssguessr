@@ -8,7 +8,7 @@ export default function ResultsList({
   return (
     <div className="flex flex-col gap-2">
       {roundResults?.status === "complete" ? (
-        resultRank(roundResults.scores, (s) => s.score).map((score) => {
+        resultRank(roundResults.scores, (s) => s.total_score).map((score) => {
           const isFirstPlace = score.rank === 1;
 
           return (
