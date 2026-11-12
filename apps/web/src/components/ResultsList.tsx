@@ -1,41 +1,27 @@
 import type { ResultsListProps } from "@cssguessr/shared-types";
 import { resultRank } from "../utils/result-rank";
+import ScoreRow from "./ScoreRow";
 
 export default function ResultsList({
   roundResults,
   myPublicId,
 }: ResultsListProps) {
-  return (
-    <div className="flex flex-col gap-2">
-      {roundResults?.status === "complete" ? (
-        resultRank(roundResults.scores, (s) => s.total_score).map((score) => {
-          const isFirstPlace = score.rank === 1;
+  if (roundResults?.status !== "complete") {
+    return <p className="text-white">Waotomg for results...</p>;
+  }
 
-          return (
-            <div
-              key={score.public_id}
-              className={`flex gap-4 rounded-lg p-4 ${
-                isFirstPlace
-                  ? "bg-amber-50 border-2 border-amber-400"
-                  : "bg-white"
-              }`}
-            >
-              <p>#{score.rank}</p>
-              <div className="flex flex-col gap-2">
-                <p>
-                  {score.name}
-                  {myPublicId === score.public_id && (
-                    <strong className="font-bold pl-1">YOU</strong>
-                  )}
-                </p>
-                <p>{score.score}</p>
-              </div>
-            </div>
-          );
-        })
-      ) : (
-        <p className="text-white">Waiting for results...</p>
-      )}
-    </div>
+  return (
+    <ol className="flex flex-col gap-2">
+      {resultRank(roundResults.scores, (p) => p.total_score).map((p) => (
+        <ScoreRow
+          key={p.public_id}
+          rank={p.rank}
+          name={p.name}
+          isYou={p.public_id === myPublicId}
+          total={p.total_score}
+          roundScore={p.score}
+        />
+      ))}
+    </ol>
   );
 }

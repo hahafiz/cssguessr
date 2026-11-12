@@ -22,6 +22,14 @@ export interface ScoresRow {
   score: number;
 }
 
+export interface ScoreRowProps {
+  rank: number;
+  name: string;
+  isYou: boolean;
+  total: number;
+  roundScore?: number;
+}
+
 export interface PlayersRow {
   id: number;
   player_id: string;

@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router";
 import { getStoredPublicId } from "../../api/playerId";
 import { resultRank } from "../../utils/result-rank";
+import ScoreRow from "../ScoreRow";
 
 export default function GameOver({ roomId }: GameOverProps) {
   const navigate = useNavigate();
@@ -47,31 +48,17 @@ export default function GameOver({ roomId }: GameOverProps) {
     <>
       <div className="flex flex-col gap-4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         {result?.status === "complete" ? (
-          resultRank(result.scores, (s) => s.total_score).map((score) => {
-            const isFirstPlace = score.rank === 1;
-
-            return (
-              <div
-                key={score.public_id}
-                className={`flex gap-4 rounded-lg p-4 ${
-                  isFirstPlace
-                    ? "bg-amber-100 border-2 border-amber-500 shadow-md"
-                    : "bg-white"
-                }`}
-              >
-                <p>#{score.rank}</p>
-                <div className="flex flex-col gap-2">
-                  <p>
-                    {score.name}
-                    {myPublicId === score.public_id && (
-                      <strong className="font-bold pl-1">YOU</strong>
-                    )}
-                  </p>
-                  <p>{score.total_score}</p>
-                </div>
-              </div>
-            );
-          })
+          <ol className="flex flex-col gap-2">
+            {resultRank(result.scores, (p) => p.total_score).map((p) => (
+              <ScoreRow
+                key={p.public_id}
+                rank={p.rank}
+                name={p.name}
+                isYou={p.public_id === myPublicId}
+                total={p.total_score}
+              />
+            ))}
+          </ol>
         ) : (
           <p className="text-white">Waiting for results..</p>
         )}
