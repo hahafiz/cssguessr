@@ -24,7 +24,9 @@ export default function ScoreRow({
         <p className="tabular-nums">
           {total}
           {roundScore !== undefined && (
-            <span className="pl-2 text-sm text-green-600">+{roundScore}</span>
+            <span className="pl-2 font-semibold text-green-600">
+              +{roundScore}
+            </span>
           )}
         </p>
       </div>
