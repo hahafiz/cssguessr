@@ -27,7 +27,7 @@ export default function GameLobby() {
   const [isRenameOverlayOpen, setIsRenameOverlayOpen] =
     useState<boolean>(false);
   const [savingName, setSavingName] = useState<boolean>(false);
-  const [copied, setCopied] = useState<booleanm>(false);
+  const [copied, setCopied] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const { roomId } = useParams();
   // local playerId
@@ -42,6 +42,7 @@ export default function GameLobby() {
   const navigate = useNavigate();
   const joinStarted = useRef(false);
 
+  const playerCount = playerList.length;
   const currentPlayer = playerList.find((p) => p.public_id === publicId);
   const isHost = currentPlayer?.is_host === 1;
 
@@ -163,7 +164,7 @@ export default function GameLobby() {
 
   return (
     <>
-      <div className="flex flex-col w-full h-full max-w-xl gap-4 p-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 justify-center">
+      <div className="flex flex-col w-full h-full max-w-xl gap-8 p-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 justify-center">
         <div className="flex gap-2 text-white items-center">
           <p className="text-nowrap">Invite your friends:</p>
           <p className="break-all text-sm truncate">{window.location.href}</p>
@@ -175,14 +176,25 @@ export default function GameLobby() {
             {copied ? "Copied!" : "Copy link"}
           </Button>
         </div>
-        <div className="text-white">Max players: {room?.max_players}</div>
-        <div className="flex flex-col gap-4 text-white">
-          <h3>Players</h3>
+
+        <div className="flex flex-col gap-2 text-white">
+          <div className="flex justify-between font-semibold text-slate-400">
+            <h3 className="text-sm tracking-widest">PLAYERS</h3>
+            <div className="text-sm">
+              {playerCount} / {room?.max_players}
+            </div>
+          </div>
+
           {playerList.map((p) => (
-            <div key={p.public_id} className="flex gap-2 items-center">
-              <p>{p.name}</p>
-              {p.public_id === publicId && <span>YOU</span>}
-              {p.is_host === 1 && <strong>HOST</strong>}
+            <div
+              key={p.public_id}
+              className="flex gap-2 items-center justify-between"
+            >
+              <div className="flex gap-2">
+                <p>{p.name}</p>
+                {p.public_id === publicId && <span>(YOU)</span>}
+                {p.is_host === 1 && <strong>HOST</strong>}
+              </div>
               {p.public_id === publicId && (
                 <Button variant="outline" onClick={openOverlay}>
                   Rename
