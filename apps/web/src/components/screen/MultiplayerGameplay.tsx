@@ -153,8 +153,8 @@ export default function MultiplayerGameplay() {
   }
 
   const backgroundColor = room.color_sequence[currentRound - 1]; // need - 1 here because db round_number is 1-indexed
+  const isLastRound = currentRound === room.color_sequence.length;
 
-  // TODO: FIX PHASEREVEALED
   return (
     <div className="flex flex-col gap-8 items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <RoundProgress
@@ -184,6 +184,11 @@ export default function MultiplayerGameplay() {
             userGuess={rgbGuess.join(", ")}
             remainder={remainder}
           />
+          <h2 className="text-center font-bold text-white">
+            {isLastRound
+              ? "Final standings"
+              : `Standings after round ${currentRound}`}
+          </h2>
           <ResultsList roundResults={roundResults} myPublicId={myPublicId} />
         </div>
       )}
