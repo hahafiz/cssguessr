@@ -27,6 +27,7 @@ export default function GameLobby() {
   const [isRenameOverlayOpen, setIsRenameOverlayOpen] =
     useState<boolean>(false);
   const [savingName, setSavingName] = useState<boolean>(false);
+  const [copied, setCopied] = useState<booleanm>(false);
   const [error, setError] = useState<string>("");
   const { roomId } = useParams();
   // local playerId
@@ -97,6 +98,12 @@ export default function GameLobby() {
     }
   }, [roomStatus, roomId, navigate]);
 
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timer);
+  }, [copied]);
+
   // flip room status to "active"
   const onStart = async () => {
     if (roomId && playerId) {
@@ -140,6 +147,16 @@ export default function GameLobby() {
     }
   };
 
+  const onCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+    } catch (err) {
+      console.error("Could not copy link: ", err);
+      setError("Could not copy the link. Select it and copy it by hand.");
+    }
+  };
+
   if (joinError) {
     return <p className="text-white">{joinError}</p>;
   }
@@ -147,8 +164,16 @@ export default function GameLobby() {
   return (
     <>
       <div className="flex flex-col w-full h-full max-w-xl gap-4 p-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 justify-center">
-        <div className="text-white">
-          Invite your friends: {window.location.href}
+        <div className="flex gap-2 text-white items-center">
+          <p className="text-nowrap">Invite your friends:</p>
+          <p className="break-all text-sm truncate">{window.location.href}</p>
+          <Button
+            variant="outline"
+            className="text-nowrap"
+            onClick={onCopyLink}
+          >
+            {copied ? "Copied!" : "Copy link"}
+          </Button>
         </div>
         <div className="text-white">Max players: {room?.max_players}</div>
         <div className="flex flex-col gap-4 text-white">
