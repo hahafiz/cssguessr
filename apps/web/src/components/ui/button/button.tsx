@@ -25,7 +25,7 @@ export const Button = ({
     success: "bg-green-600 hover:bg-green-700 text-white focus:ring-green-500",
     danger: "bg-red-600 hover:bg-red-700 text-white focus:ring-red-500",
     outline:
-      "bg-transparent border border-gray-300 text-gray-300 hover:bg-gray-50 focus:ring-gray-500",
+      "bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500",
     ghost: "bg-transparent hover:bg-gray-100 text-gray-700 focus:ring-gray-500",
   };
 
