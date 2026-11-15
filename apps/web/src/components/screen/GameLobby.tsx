@@ -165,9 +165,14 @@ export default function GameLobby() {
   return (
     <>
       <div className="flex flex-col w-full h-full max-w-xl gap-8 p-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 justify-center">
-        <div className="flex gap-2 text-white items-center">
+        <div className="flex gap-2 text-white items-baseline">
           <p className="text-nowrap">Invite your friends:</p>
-          <p className="break-all text-sm truncate">{window.location.href}</p>
+          <input
+            type="text"
+            value={window.location.href}
+            readOnly
+            className="min-w-0 grow truncate rounded-md border border-gray-500 bg-transparent px-2 py-1 text-sm text-white focus:border-blue-400 focus:outline-none"
+          />
           <Button
             variant="outline"
             className="text-nowrap"
@@ -190,9 +195,13 @@ export default function GameLobby() {
               key={p.public_id}
               className="flex gap-2 items-center justify-between"
             >
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-baseline">
                 <p>{p.name}</p>
-                {p.public_id === publicId && <span>(YOU)</span>}
+                {p.public_id === publicId && (
+                  <span className="text-sm font-semibold text-slate-400 tracking-widest">
+                    (YOU)
+                  </span>
+                )}
                 {p.is_host === 1 && <strong>HOST</strong>}
               </div>
               {p.public_id === publicId && (
