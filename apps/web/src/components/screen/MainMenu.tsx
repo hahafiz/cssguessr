@@ -13,6 +13,9 @@ export default function MainMenu() {
         <Button variant="primary" onClick={() => navigate("/setup?mode=duel")}>
           Duel Mode
         </Button>
+        <Button variant="primary" onClick={() => navigate("/practice")}>
+          Practice
+        </Button>
       </div>
     </>
   );
