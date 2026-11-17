@@ -8,10 +8,10 @@ export default function MainMenu() {
     <>
       <div className="flex flex-col gap-4 w-28">
         <Button variant="primary" onClick={() => navigate("/setup?mode=solo")}>
-          Solo Mode
+          Singleplayer
         </Button>
-        <Button variant="primary" onClick={() => navigate("/setup?mode=duel")}>
-          Duel Mode
+        <Button variant="primary" onClick={() => navigate("/setup?mode=party")}>
+          Create Party
         </Button>
         <Button variant="primary" onClick={() => navigate("/practice")}>
           Practice

@@ -15,7 +15,7 @@ export default function GameOptions() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  if (mode !== "solo" && mode !== "duel") {
+  if (mode !== "solo" && mode !== "party") {
     return (
       <p>
         Invalid game mode
@@ -25,8 +25,8 @@ export default function GameOptions() {
   }
 
   const onCreateGame = async () => {
-    if (mode === "duel" && (maxPlayers < 2 || maxPlayers > 10)) {
-      setError("Duel needs 2 to 10 players");
+    if (mode === "party" && (maxPlayers < 2 || maxPlayers > 10)) {
+      setError("Party needs 2 to 10 players");
       return;
     }
 
@@ -34,15 +34,15 @@ export default function GameOptions() {
     setIsSubmitting(true);
     try {
       const newRoom = await createRoom({
-        max_players: mode === "duel" ? maxPlayers : 1,
+        max_players: mode === "party" ? maxPlayers : 1,
       });
       storePlayer(newRoom.id, {
         playerId: newRoom.player_id,
         publicId: newRoom.public_id,
       });
 
-      if (mode === "duel") {
-        navigate(`/duel/lobby/${newRoom.id}`);
+      if (mode === "party") {
+        navigate(`/party/lobby/${newRoom.id}`);
       } else {
         navigate(`/solo/${newRoom.id}`);
       }
@@ -101,7 +101,7 @@ export default function GameOptions() {
           </div>
         )}
 
-        {mode === "duel" && (
+        {mode === "party" && (
           <>
             <label className="text-white">Max player</label>
             <input

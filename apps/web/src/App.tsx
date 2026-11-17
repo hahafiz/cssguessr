@@ -11,7 +11,7 @@ const router = createBrowserRouter([
   { path: "/setup", element: <GameOptions /> },
   { path: "/practice", element: <PracticeMode /> },
   { path: "/solo/:roomId", element: <SoloGameplay /> },
-  { path: "/duel/lobby/:roomId", element: <GameLobby /> },
+  { path: "/party/lobby/:roomId", element: <GameLobby /> },
   { path: "/room/:roomId", element: <MultiplayerGameplay /> },
 ]);
 
