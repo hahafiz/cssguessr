@@ -126,6 +126,7 @@ export interface ColorChannel {
 
 export interface ColorSwatchProps {
   color: string;
+  children?: React.ReactNode;
 }
 
 export interface SliderProps {

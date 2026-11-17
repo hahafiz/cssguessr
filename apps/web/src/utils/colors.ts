@@ -8,3 +8,16 @@ export function rgbToHex(color: RGBColor): string {
 
   return hexR + hexG + hexB;
 }
+
+function channelToLinear(channel: number): number {
+  const c = channel / 255;
+  return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+}
+
+export function getRelativeLuminance([red, green, blue]: RGBColor): number {
+  return (
+    0.2126 * channelToLinear(red) +
+    0.7152 * channelToLinear(green) +
+    0.0722 * channelToLinear(blue)
+  );
+}
