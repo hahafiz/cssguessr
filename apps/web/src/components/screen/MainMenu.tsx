@@ -6,7 +6,7 @@ export default function MainMenu() {
 
   return (
     <>
-      <div className="flex flex-col gap-4 w-28 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex flex-col gap-4 w-28">
         <Button variant="primary" onClick={() => navigate("/setup?mode=solo")}>
           Solo Mode
         </Button>

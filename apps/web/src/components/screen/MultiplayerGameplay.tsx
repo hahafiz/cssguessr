@@ -136,7 +136,7 @@ export default function MultiplayerGameplay() {
 
   if (!room.started_at) {
     return (
-      <div className="flex flex-col gap-4 items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex flex-col gap-4 items-center">
         <p className="text-white">This game hasn't started yet</p>
         <Button
           variant="primary"
@@ -156,7 +156,7 @@ export default function MultiplayerGameplay() {
   const isLastRound = currentRound === room.color_sequence.length;
 
   return (
-    <div className="flex flex-col gap-8 items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+    <div className="flex flex-col gap-8 items-center justify-center">
       <RoundProgress
         current={currentRound}
         total={room.color_sequence.length}

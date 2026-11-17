@@ -46,7 +46,7 @@ export default function GameOver({ roomId }: GameOverProps) {
 
   return (
     <>
-      <div className="flex flex-col gap-4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex flex-col gap-4 rounded-lg">
         <h2 className="text-center font-bold text-white">Final Results</h2>
         {result?.status === "complete" ? (
           <ol className="flex flex-col gap-2">

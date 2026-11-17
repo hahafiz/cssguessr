@@ -164,7 +164,7 @@ export default function GameLobby() {
 
   return (
     <>
-      <div className="flex flex-col w-full h-full max-w-xl gap-8 p-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 justify-center">
+      <div className="flex flex-col w-full h-full max-w-xl gap-8 p-10 justify-center">
         <div className="flex gap-2 text-white items-baseline">
           <p className="text-nowrap">Invite your friends:</p>
           <input

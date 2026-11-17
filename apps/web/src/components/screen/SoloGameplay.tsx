@@ -74,7 +74,7 @@ export default function SoloGameplay() {
   }
 
   return (
-    <div className="flex flex-col gap-8 items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+    <div className="flex flex-col gap-8 items-center justify-center">
       <RoundProgress
         current={currentRound}
         total={room.color_sequence.length}
