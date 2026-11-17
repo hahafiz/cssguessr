@@ -5,6 +5,7 @@ import { Button } from "../ui/button/Button";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { rgbToHex } from "../../utils/colors";
+import { HexLabel } from "../HexLabel";
 
 export default function PracticeMode() {
   const navigate = useNavigate();
@@ -23,9 +24,7 @@ export default function PracticeMode() {
   return (
     <div className="flex flex-col gap-4 justify-center items-center">
       <ColorSwatch color={backgroundColor} />
-      <p className="text-white uppercase text-xl font-mono">
-        #{rgbToHex(rgbGuess)}
-      </p>
+      <HexLabel hex={rgbToHex(rgbGuess)} />
       <div className="flex flex-col gap-8 justify-center rounded-lg">
         <GuessInput
           values={rgbGuess}

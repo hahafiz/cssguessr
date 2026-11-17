@@ -3,6 +3,7 @@ export const ROUND_SCORE = 1000;
 export const ROUND_DURATION_MS = 11000; // 11000
 export const REVEAL_DURATION_MS = 6000; // 6000
 export const SUBMIT_GRACE_MS = 3000;
+export const HEX_SYMBOLS = "0123456789abcdef".split("");
 
 // tables types
 export interface RoomsRow {
@@ -177,3 +178,8 @@ export interface StoredPlayer {
   playerId: string; // secret, only sent in requests
   publicId: string; // safe to show and compare
 }
+
+export type HexDigitProps = {
+  char: string; // one hex character, "0" to "f"
+  position: number; // 0 to 5, used only for the stagger
+};
