@@ -4,6 +4,7 @@ export const ROUND_DURATION_MS = 11000; // 11000
 export const REVEAL_DURATION_MS = 6000; // 6000
 export const SUBMIT_GRACE_MS = 3000;
 export const HEX_SYMBOLS = "0123456789abcdef".split("");
+export const LUMINANCE_THRESHOLD = 0.179;
 
 // tables types
 export interface RoomsRow {
@@ -126,6 +127,7 @@ export interface ColorChannel {
 
 export interface ColorSwatchProps {
   color: string;
+  textColor?: string;
   children?: React.ReactNode;
 }
 
