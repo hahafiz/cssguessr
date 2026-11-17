@@ -23,8 +23,10 @@ export default function PracticeMode() {
   return (
     <div className="flex flex-col gap-4 justify-center items-center">
       <ColorSwatch color={backgroundColor} />
-      <p className="text-white uppercase font-mono">#{rgbToHex(rgbGuess)}</p>
-      <div className="flex flex-col justify-center rounded-lg">
+      <p className="text-white uppercase text-xl font-mono">
+        #{rgbToHex(rgbGuess)}
+      </p>
+      <div className="flex flex-col gap-8 justify-center rounded-lg">
         <GuessInput
           values={rgbGuess}
           channels={RGB_CHANNELS}
