@@ -163,101 +163,95 @@ export default function GameLobby() {
   }
 
   return (
-    <>
-      <div className="flex flex-col w-full h-full max-w-xl gap-8 p-10 justify-center">
-        <div className="flex gap-2 text-white items-baseline">
-          <p className="text-nowrap">Invite your friends:</p>
-          <input
-            type="text"
-            value={window.location.href}
-            readOnly
-            className="min-w-0 grow truncate rounded-md border border-gray-500 bg-transparent px-2 py-1 text-sm text-white focus:border-blue-400 focus:outline-none"
-          />
-          <Button
-            variant="outline"
-            className="text-nowrap"
-            onClick={onCopyLink}
-          >
-            {copied ? "Copied!" : "Copy link"}
-          </Button>
-        </div>
-
-        <div className="flex flex-col gap-2 text-white">
-          <div className="flex justify-between font-semibold text-slate-400">
-            <h3 className="text-sm tracking-widest">PLAYERS</h3>
-            <div className="text-sm">
-              {playerCount} / {room?.max_players}
-            </div>
-          </div>
-
-          {playerList.map((p) => (
-            <div
-              key={p.public_id}
-              className="flex gap-2 items-center justify-between"
-            >
-              <div className="flex gap-2 items-baseline">
-                <p>{p.name}</p>
-                {p.public_id === publicId && (
-                  <span className="text-sm font-semibold text-slate-400 tracking-widest">
-                    (YOU)
-                  </span>
-                )}
-                {p.is_host === 1 && <strong>HOST</strong>}
-              </div>
-              {p.public_id === publicId && (
-                <Button variant="outline" onClick={openOverlay}>
-                  Rename
-                </Button>
-              )}
-            </div>
-          ))}
-        </div>
-        {isHost ? (
-          <Button variant="primary" onClick={onStart}>
-            Start Game
-          </Button>
-        ) : (
-          <p className="text-white">Waiting for host to start</p>
-        )}
-
-        {isRenameOverlayOpen && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-            onClick={closeOverlay}
-          >
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-label="Rename player"
-              onClick={(e) => e.stopPropagation()}
-              className="flex w-full max-w-md flex-col gap-3 rounded-lg bg-white p-6 shadow-xl"
-            >
-              {error && (
-                <p className="rounded-lg bg-red-50 p-3 text-sm text-red-500">
-                  {error}
-                </p>
-              )}
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  maxLength={NAME_MAX_LENGTH}
-                  value={playerName}
-                  onChange={(e) => setPlayerName(e.target.value)}
-                  className="min-w-0 flex-1 rounded-md bg-slate-200 py-1 px-2 text-black"
-                  autoFocus
-                />
-                <Button
-                  variant="primary"
-                  onClick={onSaveName}
-                  disabled={savingName}
-                >
-                  {savingName ? "Saving..." : "Save"}
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
+    <div className="flex flex-col w-full h-full max-w-xl gap-8 p-10 justify-center">
+      <div className="flex gap-2 text-white items-baseline">
+        <p className="text-nowrap">Invite your friends:</p>
+        <input
+          type="text"
+          value={window.location.href}
+          readOnly
+          className="min-w-0 grow truncate rounded-md border border-gray-500 bg-transparent px-2 py-1 text-sm text-white focus:border-blue-400 focus:outline-none"
+        />
+        <Button variant="outline" className="text-nowrap" onClick={onCopyLink}>
+          {copied ? "Copied!" : "Copy link"}
+        </Button>
       </div>
-    </>
+
+      <div className="flex flex-col gap-2 text-white">
+        <div className="flex justify-between font-semibold text-slate-400">
+          <h3 className="text-sm tracking-widest">PLAYERS</h3>
+          <div className="text-sm">
+            {playerCount} / {room?.max_players}
+          </div>
+        </div>
+
+        {playerList.map((p) => (
+          <div
+            key={p.public_id}
+            className="flex gap-2 items-center justify-between"
+          >
+            <div className="flex gap-2 items-baseline">
+              <p>{p.name}</p>
+              {p.public_id === publicId && (
+                <span className="text-sm font-semibold text-slate-400 tracking-widest">
+                  (YOU)
+                </span>
+              )}
+              {p.is_host === 1 && <strong>HOST</strong>}
+            </div>
+            {p.public_id === publicId && (
+              <Button variant="outline" onClick={openOverlay}>
+                Rename
+              </Button>
+            )}
+          </div>
+        ))}
+      </div>
+      {isHost ? (
+        <Button variant="primary" onClick={onStart}>
+          Start Game
+        </Button>
+      ) : (
+        <p className="text-white">Waiting for host to start</p>
+      )}
+
+      {isRenameOverlayOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={closeOverlay}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Rename player"
+            onClick={(e) => e.stopPropagation()}
+            className="flex w-full max-w-md flex-col gap-3 rounded-lg bg-white p-6 shadow-xl"
+          >
+            {error && (
+              <p className="rounded-lg bg-red-50 p-3 text-sm text-red-500">
+                {error}
+              </p>
+            )}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                maxLength={NAME_MAX_LENGTH}
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                className="min-w-0 flex-1 rounded-md bg-slate-200 py-1 px-2 text-black"
+                autoFocus
+              />
+              <Button
+                variant="primary"
+                onClick={onSaveName}
+                disabled={savingName}
+              >
+                {savingName ? "Saving..." : "Save"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

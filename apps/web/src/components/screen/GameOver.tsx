@@ -45,28 +45,26 @@ export default function GameOver({ roomId }: GameOverProps) {
   }, [roomId]);
 
   return (
-    <>
-      <div className="flex flex-col gap-4 rounded-lg">
-        <h2 className="text-center font-bold text-white">Final Results</h2>
-        {result?.status === "complete" ? (
-          <ol className="flex flex-col gap-2">
-            {resultRank(result.scores, (p) => p.total_score).map((p) => (
-              <ScoreRow
-                key={p.public_id}
-                rank={p.rank}
-                name={p.name}
-                isYou={p.public_id === myPublicId}
-                total={p.total_score}
-              />
-            ))}
-          </ol>
-        ) : (
-          <p className="text-white">Waiting for results..</p>
-        )}
-        <Button variant="primary" onClick={() => navigate("/")}>
-          Return to Main Menu
-        </Button>
-      </div>
-    </>
+    <div className="flex flex-col gap-4 rounded-lg">
+      <h2 className="text-center font-bold text-white">Final Results</h2>
+      {result?.status === "complete" ? (
+        <ol className="flex flex-col gap-2">
+          {resultRank(result.scores, (p) => p.total_score).map((p) => (
+            <ScoreRow
+              key={p.public_id}
+              rank={p.rank}
+              name={p.name}
+              isYou={p.public_id === myPublicId}
+              total={p.total_score}
+            />
+          ))}
+        </ol>
+      ) : (
+        <p className="text-white">Waiting for results..</p>
+      )}
+      <Button variant="primary" onClick={() => navigate("/")}>
+        Return to Main Menu
+      </Button>
+    </div>
   );
 }
