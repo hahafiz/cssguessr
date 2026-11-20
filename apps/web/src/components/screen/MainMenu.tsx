@@ -5,7 +5,12 @@ export default function MainMenu() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col gap-4 w-28">
+    <div className="flex flex-col gap-4 p-8 w-screen">
+      <div>
+        <span className="text-primary-600 font-mono font-bold">
+          css_guessr()
+        </span>
+      </div>
       <Button variant="primary" onClick={() => navigate("/setup?mode=solo")}>
         Singleplayer
       </Button>
