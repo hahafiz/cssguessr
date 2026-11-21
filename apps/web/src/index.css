@@ -42,16 +42,16 @@
   --color-tertiary-900: #312e81;
   --color-tertiary-950: #1e1b4b;
 
-  --color-neutral-50: #f4f6fb;
-  --color-neutral-100: #e7ecf7;
-  --color-neutral-200: #cad7ed;
-  --color-neutral-300: #9bb5de;
-  --color-neutral-400: #668eca;
-  --color-neutral-500: #4270b5;
-  --color-neutral-600: #315798;
-  --color-neutral-700: #29467b;
-  --color-neutral-800: #253d67;
-  --color-neutral-900: #233557;
+  --color-neutral-50: #ffffff;
+  --color-neutral-100: #eef0fe;
+  --color-neutral-200: #dfe2ef;
+  --color-neutral-300: #c3c6d3;
+  --color-neutral-400: #a8abb8;
+  --color-neutral-500: #8d909d;
+  --color-neutral-600: #5a5e69;
+  --color-neutral-700: #434751;
+  --color-neutral-800: #2c303a;
+  --color-neutral-900: #181b25;
   --color-neutral-950: #090d16;
 }
 
