@@ -31,7 +31,7 @@ export const Button = ({
   };
 
   const sizeClasses: Record<ButtonSize, string> = {
-    xs: "py-1 px-2 text-xs",
+    xs: "p-1.5 text-xs",
     sm: "py-1.5 px-3 text-sm",
     md: "py-2 px-4 text-sm",
     lg: "py-2.5 px-5 text-base",
