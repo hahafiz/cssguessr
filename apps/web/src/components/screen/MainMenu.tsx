@@ -1,14 +1,36 @@
 import { Button } from "../ui/button/Button";
-import { UserRound } from "lucide-react";
+import {
+  UserRound,
+  PaintBucket,
+  Palette,
+  Component,
+  type LucideIcon,
+} from "lucide-react";
 import Logo from "../ui/Logo";
-import type { MenuOptionsConfig } from "@cssguessr/shared-types";
 import ModeCard from "../ui/button/ModeCard";
+
+export interface MenuOptionsConfig {
+  id: string;
+  label: string;
+  path: string;
+  icon: LucideIcon;
+}
 
 export default function MainMenu() {
   const MenuOptions: MenuOptionsConfig[] = [
-    { id: "singleplayer", label: "Singleplayer", path: "/setup?mode=solo" },
-    { id: "party", label: "Create Party", path: "/setup?mode=party" },
-    { id: "practice", label: "Practice", path: "/practice" },
+    {
+      id: "singleplayer",
+      label: "Singleplayer",
+      path: "/setup?mode=solo",
+      icon: PaintBucket,
+    },
+    {
+      id: "party",
+      label: "Create Party",
+      path: "/setup?mode=party",
+      icon: Component,
+    },
+    { id: "practice", label: "Practice", path: "/practice", icon: Palette },
   ];
 
   return (
@@ -20,7 +42,13 @@ export default function MainMenu() {
         </Button>
       </div>
       {MenuOptions.map((c) => (
-        <ModeCard id={c.id} label={c.label} path={c.path} />
+        <ModeCard
+          key={c.id}
+          id={c.id}
+          label={c.label}
+          path={c.path}
+          icon={c.icon}
+        />
       ))}
     </div>
   );
