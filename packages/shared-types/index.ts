@@ -186,3 +186,9 @@ export type HexDigitProps = {
   char: string; // one hex character, "0" to "f"
   position: number; // 0 to 5, used only for the stagger
 };
+
+export interface MenuOptionsConfig {
+  id: string;
+  label: string;
+  path: string;
+}
