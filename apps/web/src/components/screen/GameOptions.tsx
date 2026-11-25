@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import { createRoom } from "../../api/rooms";
 import { Button } from "../ui/button/Button";
 import { storePlayer } from "../../api/playerId";
+import { Hash, Palette, Pipette, SlidersHorizontal } from "lucide-react";
 
 export default function GameOptions() {
   const [searchParams] = useSearchParams();
@@ -55,23 +56,25 @@ export default function GameOptions() {
   };
 
   return (
-    <div className="flex flex-col gap-4 w-48">
+    <div className="flex flex-col gap-4 p-8 w-screen">
       <div className="flex flex-col gap-2">
-        <p className="text-white">Select color mode</p>
+        <p className="text-white font-mono text-xs">color_mode:</p>
         <div className="flex gap-2">
           <Button
             variant="secondary"
-            className="flex-1"
+            className="flex-1 gap-2"
             onClick={() => setColorFormat("rgb")}
           >
+            <Palette className="size-4" />
             RGB
           </Button>
           <Button
             variant="secondary"
-            className="flex-1"
+            className="flex-1 gap-2"
             onClick={() => setColorFormat("hsl")}
             disabled
           >
+            <Pipette className="size-4" />
             HSL
           </Button>
         </div>
@@ -79,21 +82,23 @@ export default function GameOptions() {
 
       {colorFormat === "rgb" && (
         <div className="flex flex-col gap-2">
-          <p className="text-white">Select RGB input format</p>
+          <p className="text-white font-mono text-xs">input_format:</p>
           <div className="flex gap-2">
             <Button
               variant="secondary"
-              className="flex-1"
+              className="flex-1 gap-2"
               onClick={() => setInputMethod("slider")}
             >
+              <SlidersHorizontal className="size-4" />
               Slider
             </Button>
             <Button
               variant="secondary"
-              className="flex-1"
+              className="flex-1 gap-2"
               onClick={() => setInputMethod("hex")}
               disabled
             >
+              <Hash className="size-4" />
               Hex
             </Button>
           </div>
@@ -102,7 +107,7 @@ export default function GameOptions() {
 
       {mode === "party" && (
         <>
-          <label className="text-white">Max player</label>
+          <label className="text-white font-mono text-xs">party_size:</label>
           <input
             id="max-player"
             type="number"
@@ -125,7 +130,7 @@ export default function GameOptions() {
       )}
 
       <Button variant="primary" onClick={onCreateGame} disabled={isSubmitting}>
-        Start Game
+        start_game
       </Button>
     </div>
   );
