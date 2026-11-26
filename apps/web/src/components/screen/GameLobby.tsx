@@ -163,18 +163,24 @@ export default function GameLobby() {
   }
 
   return (
-    <div className="flex flex-col w-full h-full max-w-xl gap-8 p-10 justify-center">
-      <div className="flex gap-2 text-white items-baseline">
-        <p className="text-nowrap">Invite your friends:</p>
-        <input
-          type="text"
-          value={window.location.href}
-          readOnly
-          className="min-w-0 grow truncate rounded-md border border-gray-500 bg-transparent px-2 py-1 text-sm text-white focus:border-blue-400 focus:outline-none"
-        />
-        <Button variant="outline" className="text-nowrap" onClick={onCopyLink}>
-          {copied ? "Copied!" : "Copy link"}
-        </Button>
+    <div className="flex flex-col w-screen gap-8 p-10 justify-center">
+      <div className="flex flex-col gap-2 text-white">
+        <h3 className="text-sm tracking-widest">multiplayer_session:</h3>
+        <div className="flex gap-2 bg-neutral-950 p-3 rounded-xl">
+          <input
+            type="text"
+            value={window.location.href}
+            readOnly
+            className="min-w-0 grow truncate rounded-md border border-transparent bg-transparent px-2 py-1 text-sm text-white focus:border-blue-400 focus:outline-none"
+          />
+          <Button
+            variant="secondary"
+            className="text-nowrap"
+            onClick={onCopyLink}
+          >
+            {copied ? "Copied!" : "Copy link"}
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-col gap-2 text-white">
