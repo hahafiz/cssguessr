@@ -20,7 +20,7 @@ export const Button = ({
 
   const variantClasses: Record<ButtonVariant, string> = {
     primary:
-      "bg-primary-500 hover:bg-primary-700 text-primary-950 focus:ring-primary-300",
+      "bg-accent text-on-accent hover:bg-accent-hover focus:ring-accent-hover",
     secondary:
       "bg-secondary-200 hover:bg-secondary-300 text-secondary-900 focus:ring-secondary-500",
     success: "bg-green-600 hover:bg-green-700 text-white focus:ring-green-500",

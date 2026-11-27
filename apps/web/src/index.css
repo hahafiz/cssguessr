@@ -6,6 +6,7 @@
   --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, mmonospace;
 
+  /* BRAND */
   --color-primary-50: #edfffb;
   --color-primary-100: #c0fff1;
   --color-primary-200: #81ffe5;
@@ -53,6 +54,27 @@
   --color-neutral-800: #1c2431; /* raised cards */
   --color-neutral-900: #111722; /* surface */
   --color-neutral-950: #0a0e16; /* app background */
+
+  /* RGB slider channels */
+  --color-channel-r: #f4978e;
+  --color-channel-g: #3ddc97;
+  --color-channel-b: #5b9cf5;
+
+  /* Feedback */
+  --color-danger: #f87171;
+}
+
+/* Semantic layer */
+@theme inline {
+  --color-background: var(--color-neutral-950);
+  --color-surface: var(--color-neutral-900);
+  --color-surface-raised: var(--color-neutral-800);
+  --color-border: var(--color-neutral-700);
+  --color-foreground: var(--color-neutral-50);
+  --color-muted: var(--color-neutral-400);
+  --color-accent: var(--color-primary-400);
+  --color-accent-hover: var(--color-primary-300);
+  --color-on-accent: var(--color-neutral-950);
 }
 
 .slider {
