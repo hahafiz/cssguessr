@@ -166,7 +166,7 @@ export default function GameLobby() {
     <div className="flex flex-col w-screen gap-8 p-10 justify-center">
       <div className="flex flex-col gap-2 text-white">
         <h3 className="text-sm tracking-widest">multiplayer_session:</h3>
-        <div className="flex gap-2 bg-neutral-950 p-3 rounded-xl">
+        <div className="flex gap-2 bg-neutral-900 p-3 rounded-xl">
           <input
             type="text"
             value={window.location.href}

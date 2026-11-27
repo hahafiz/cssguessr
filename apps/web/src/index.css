@@ -42,17 +42,17 @@
   --color-tertiary-900: #312e81;
   --color-tertiary-950: #1e1b4b;
 
-  --color-neutral-50: #ffffff;
-  --color-neutral-100: #eef0fe;
-  --color-neutral-200: #dfe2ef;
-  --color-neutral-300: #c3c6d3;
-  --color-neutral-400: #a8abb8;
-  --color-neutral-500: #8d909d;
-  --color-neutral-600: #737783;
-  --color-neutral-700: #434751;
-  --color-neutral-800: #2c303a;
-  --color-neutral-900: #181b25;
-  --color-neutral-950: #090d16;
+  --color-neutral-50: #f4f6fa;
+  --color-neutral-100: #e8ecf3;
+  --color-neutral-200: #d3d9e4;
+  --color-neutral-300: #b4bccb;
+  --color-neutral-400: #8e98ab; /* muted text */
+  --color-neutral-500: #6b7589;
+  --color-neutral-600: #4c566a;
+  --color-neutral-700: #2d3647; /* borders */
+  --color-neutral-800: #1c2431; /* raised cards */
+  --color-neutral-900: #111722; /* surface */
+  --color-neutral-950: #0a0e16; /* app background */
 }
 
 .slider {
