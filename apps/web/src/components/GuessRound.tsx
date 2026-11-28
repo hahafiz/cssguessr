@@ -5,11 +5,13 @@ import { Button } from "./ui/button/Button";
 import {
   RGB_CHANNELS,
   ROUND_DURATION_MS,
+  SEQUENCE_LENGTH,
   type GuessRoundProps,
   type RGBColor,
 } from "@cssguessr/shared-types";
 import { submitScore } from "../api/rooms";
 import Countdown from "./Countdown";
+import RoundProgress from "./RoundProgress";
 
 export default function GuessRound({
   backgroundColor,
@@ -55,9 +57,13 @@ export default function GuessRound({
 
   return (
     <div className="flex flex-col items-center gap-4">
-      {remainder !== 0 && (
-        <Countdown duration={ROUND_DURATION_MS} remainder={remainder} />
-      )}
+      <RoundProgress current={currentRound} total={SEQUENCE_LENGTH} />
+      <div className="flex justify-between">
+        {remainder !== 0 && (
+          <Countdown duration={ROUND_DURATION_MS} remainder={remainder} />
+        )}
+        {/* TODO: ADD CURRENT TOTAL POINT */}
+      </div>
       <div className="flex flex-col gap-4 justify-center items-center">
         <ColorSwatch color={backgroundColor} />
         <div className="flex flex-col gap-8 justify-center rounded-lg">
